@@ -32,8 +32,11 @@ return [
             'url' => env('XAI_URL', 'https://api.x.ai/v1'),
         ],
         'gemini' => [
-            'api_key' => env('GEMINI_API_KEY', 'AIzaSyALNHptaASw6hgU-cWFYfZdx7n6xIm8A-w'),
-            'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/'),
+            'api_key' => env('GEMINI_API_KEY', ''),
+            'url' => env('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models'),
+        ],
+        'deepseek' => [
+            'api_key' => env('DEEPSEEK_API_KEY', ''),
         ],
     ],
 ];

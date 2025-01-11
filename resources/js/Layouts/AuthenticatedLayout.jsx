@@ -7,9 +7,7 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
-
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -24,12 +22,52 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
+                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
+
+
+                                <div className="inline-flex items-center border-b-2 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ">
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                        <span className="inline-flex">
+                                            <button
+                                                type="button"
+                                                className="inline-flex items-center rounded-md border border-transparent
+                                                bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out
+                                                hover:text-gray-700 focus:outline-none"
+                                            >
+                                                Tutorials
+                                                <svg
+                                                    className="-me-0.5 ms-2 h-4 w-4"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                        </Dropdown.Trigger>
+
+                                        <Dropdown.Content align="left">
+                                            <Dropdown.Link href={route('tutorials.tenzies')} active={route().current('tutorials.tenzies')}>
+                                                Tenzies
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('tutorials.word')} active={route().current('tutorials.word')}>
+                                                Word Game
+                                            </Dropdown.Link>
+                                            <Dropdown.Link href={route('tutorials.tosty')} active={route().current('tutorials.tosty')}>
+                                                Tosty
+                                            </Dropdown.Link>
+
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
                             </div>
                         </div>
 
@@ -61,16 +99,10 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
+                                        <Dropdown.Link href={route('profile.edit')}>
                                             Profile
                                         </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
+                                        <Dropdown.Link href={route('logout')} method="post" as="button">
                                             Log Out
                                         </Dropdown.Link>
                                     </Dropdown.Content>

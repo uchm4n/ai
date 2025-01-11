@@ -1,9 +1,14 @@
 import '../css/app.css';
 import './bootstrap';
 
-import { createInertiaApp } from '@inertiajs/react';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createRoot } from 'react-dom/client';
+import {StrictMode} from 'react';
+import {createInertiaApp} from '@inertiajs/react';
+import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
+import {createRoot} from 'react-dom/client';
+import {DevSupport} from "@react-buddy/ide-toolbox";
+import {useInitial} from "@/jetbrains_plugin_helper";
+import ComponentPreviews from "@/jetbrains_plugin_helper/previews";
+import {ConfigProvider} from "antd";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -14,12 +19,38 @@ createInertiaApp({
             `./Pages/${name}.jsx`,
             import.meta.glob('./Pages/**/*.jsx'),
         ),
-    setup({ el, App, props }) {
+    setup({el, App, props}) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <>
+                <StrictMode>
+                    <ConfigProvider
+                        theme={{
+                            components: {
+                                Switch: {
+                                    handleBg: '#fff',
+
+                                },
+
+                            },
+                            token: {
+                                colorPrimary: '#ff1616', // Set primary color globally for all components
+                            },
+                        }}
+                    >
+                        <DevSupport
+                            ComponentPreviews={<ComponentPreviews/>}
+                            useInitialHook={useInitial}
+                        >
+                            <App {...props} />
+                        </DevSupport>
+                    </ConfigProvider>
+                </StrictMode>
+            </>
+        );
     },
     progress: {
-        color: '#4B5563',
+        color: '#ff1616',
     },
 });

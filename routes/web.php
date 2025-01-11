@@ -2,9 +2,7 @@
 
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\ProfileController;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Exceptions\PrismException;
-use EchoLabs\Prism\Prism;
+use App\Http\Controllers\TutorialsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,11 +16,18 @@ Route::get('/', function () {
     ]);
 });
 
+Route::middleware(['auth','verified'])->group(function () {
+	Route::get('/dashboard', [Dashboard::class, 'index'])->name('dashboard');
+	Route::group(['prefix' => 'tutorials'], function () {
+		Route::get('/tenzies', [TutorialsController::class, 'tenzies'])->name('tutorials.tenzies');
+		Route::get('/word', [TutorialsController::class, 'word'])->name('tutorials.word');
+		Route::get('/generate', [TutorialsController::class, 'wordGenerate'])->name('tutorials.word.generate');
+		Route::get('/tosty', [TutorialsController::class, 'tosty'])->name('tutorials.tosty');
+	});
 
-Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::post('/send', [Dashboard::class, 'send'])->middleware(['auth', 'verified'])->name('ai.send');
+	Route::match(['GET','POST'],'/stream', [Dashboard::class, 'stream'])->name('ai.stream');
+	Route::match(['GET','POST'],'/send', [Dashboard::class, 'send'])->name('ai.send');
 
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
