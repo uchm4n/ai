@@ -49,7 +49,7 @@ class Dashboard extends Controller
 				->withClientOptions(['timeout' => 120])
 				->generate();
 
-			return Inertia::render('Dashboard', ['msg' => str($ai->text)->trim(), 'status' => Response::HTTP_OK]);
+			return Inertia::render('Dashboard', ['msg' => trim($ai->text), 'status' => Response::HTTP_OK]);
 		} catch (Throwable $e) {
 			return Inertia::render('Dashboard', ['msg' => null, 'status' => Response::HTTP_INTERNAL_SERVER_ERROR]);
 		}
