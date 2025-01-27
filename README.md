@@ -7,7 +7,7 @@ Response is being streamed to the client in real-time.
 Laravel, ReactJS, InertiaJS, TailwindCSS.
 
 ### TODO
-- [ ] Use vector database for embeddings
+- [x] Use vector database for embeddings
 - [ ] Use LLM models for embeddings
 - [ ] Scape data from the web
 - [ ] Output `specialized` data based on the scraped data + LLM embeddings
