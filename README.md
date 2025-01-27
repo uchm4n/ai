@@ -1,12 +1,14 @@
-
 ## About This Project
-This is the demonstration of the project that utilizes LLM models (Phi4 and DeepSeek) with predetermined parameters. 
+
+This is the demonstration of the project that utilizes LLM models (Phi4 and DeepSeek) with predetermined parameters.
 Response is being streamed to the client in real-time.
 
 ### Technology stack
+
 Laravel, ReactJS, InertiaJS, TailwindCSS.
 
 ### TODO
+
 - [x] Use vector database for embeddings
 - [ ] Use LLM models for embeddings
 - [ ] Scape data from the web
