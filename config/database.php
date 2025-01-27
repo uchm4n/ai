@@ -42,6 +42,14 @@ return [
             'synchronous' => null,
         ],
 
+        "libsql" => [ // install libsql from Turso. after php 8.4 is released
+	        "driver" => "libsql",
+	        "database" => env('DB_DATABASE', database_path('database.db')),
+	        "url" => env("TURSO_DATABASE_URL"),
+	        "password" => env("TURSO_AUTH_TOKEN"),
+	        "sync_interval" => env("TURSO_SYNC_INTERVAL", 300),
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),

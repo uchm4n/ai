@@ -23,6 +23,13 @@ class User extends Authenticatable
         'password',
     ];
 
+	/**
+	 * The database connection that should be used by the model.
+	 *
+	 * @var string
+	 */
+	protected $connection = 'sqlite';
+
     /**
      * The attributes that should be hidden for serialization.
      *
