@@ -52,8 +52,7 @@ test('basic example', function () {
 
 		$this->browse(function (Browser $browser) {
 
-			Substance::all()->map(function (Substance $item) use ($browser) {
-				$figure = [];
+			Substance::all()->map(function (Substance $item) use (&$browser) {
 				$browser->visit($item->url);
 				$figures = $browser->elements('figure figcaption h6 a');
 				foreach ($figures as $figure) {
@@ -65,15 +64,13 @@ test('basic example', function () {
 						$ul = $article->findElements(WebDriverBy::cssSelector('article div ul li'));
 						$body = $article->findElements(WebDriverBy::cssSelector('figcaption p'));
 						dump($img->getAttribute('src'),$body[3]->getText());
-						$browser->back();
 					}
+					dump($href);
 
 					// $item->drugs()->updateOrCreate([
 					//
 					// ]);
 				}
-
-				return $figure;
 			});
 
 			$browser->stop();
