@@ -23,6 +23,7 @@ services:
             - sail
         depends_on:
             - pgsql
+            - selenium
     pgsql:
         image: 'ankane/pgvector:latest'
         ports:
@@ -48,6 +49,14 @@ services:
                 - '${DB_USERNAME}'
             retries: 3
             timeout: 5s
+    selenium:
+        image: 'selenium/standalone-chromium'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
