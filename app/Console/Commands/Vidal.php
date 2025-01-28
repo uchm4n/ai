@@ -2,19 +2,23 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Drug;
 use App\Models\Substance;
+use EchoLabs\Prism\Enums\Provider;
+use EchoLabs\Prism\Prism;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\WebDriverBy;
 use Illuminate\Console\Command;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Concerns\ProvidesBrowser;
 
+use function Laravel\Prompts\textarea;
+
 class Vidal extends Command
 {
 	use ProvidesBrowser;
-
-	public $name = 'app:vidal';
 
 	protected $description = 'Vidal scraping';
 
@@ -23,7 +27,7 @@ class Vidal extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'app:vidal';
+	protected $signature = 'apps:vidal';
 
 	/**
 	 * Execute the console command.
@@ -33,39 +37,34 @@ class Vidal extends Command
 		$this->info('Starting Vidal Scraping...');
 
 		try {
-			$this->browse(function (Browser $browser)  {
 
-				Substance::all()->map(function ($item) use (&$browser) {
-					dd($item);
-					$browser->visit($url);
-					$figures = $browser->elements('figure');
+			// $textarea = textarea('Enter your text here','Enter your text here');
 
-					foreach ($figures as $figure) {
-						$figure->findElement('img');
-					}
+			// $drugs = Substance::query()->where('title', 'like', '%aceclofenac%')
+			// 	->first()
+			// 	->drugs()
+			// 	->get(['id','url','title_ka','title_en','img'])
+			// 	->toArray();
 
+			$response = Prism::embeddings()
+				->using(Provider::Ollama, 'mxbai-embed-large:latest')
+				->fromInput('Your text goes here')
+				->generate();
 
+			dd($response);
+			$drugs = Drug::take(50000)
+				->get()
+				// ->get(['id','url','title_ka','title_en','img'])
+				->each(function (Drug $drug) {
+					$substance = $drug->substance()->find($drug->substance_id);
+					dd($substance);
+					
 				});
 
 
-				//
-				// $elements = $browser->elements('table td a');
-				//
-				// foreach ($elements as $element) {
-				// 	if (!empty($element->getText())) {
-				// 		Substance::updateOrCreate([
-				// 			'title' => $element->getText() ?? ' ',
-				// 			'url'   => $element->getAttribute('href') ?? ' ',
-				// 		]);
-				//
-				// 		logger([
-				// 			'title' => $element->getText(),
-				// 			'url'   => $element->getAttribute('href'),
-				// 		]);
-				// 	}
-				// }
-				$browser->quit();
-			});
+			// replace all non-alphanumeric characters
+			dd('done');
+
 		} catch (\Exception $e) {
 			logger()->error('Error: ' . $e->getMessage(), $e->getTrace());
 			$this->error('An error occurred: ' . $e->getMessage());
@@ -73,7 +72,6 @@ class Vidal extends Command
 
 		$this->info('Vidal scraping completed.');
 	}
-
 
 	/**
 	 * Create the RemoteWebDriver instance.
