@@ -6,5 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Embedding extends Model
 {
+	protected $guarded = [];
     //
 }
