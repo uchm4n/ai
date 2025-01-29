@@ -11,10 +11,13 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL, Docker, Selenium, Prism, D
 
 - [x] Use vector database for embeddings
 - [ ] Use LLM models for embeddings
-- [ ] Scape data from the web
+- [x] Scape data from the web
 - [ ] Output `specialized` data based on the scraped data + LLM embeddings
 
 ### Demo
+
+<h4>[nuc.ge](https://nuc.ge/)</h3>
+
 
 ![1.gif](resources/img/1.gif)
 
