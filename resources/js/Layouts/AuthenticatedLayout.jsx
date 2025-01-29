@@ -29,7 +29,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                 <div className="inline-flex items-center border-b-2 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ">
                                     <Dropdown>
-                                        <Dropdown.Trigger>
+                                        {usePage().props.appEnv && <Dropdown.Trigger>
                                         <span className="inline-flex">
                                             <button
                                                 type="button"
@@ -52,7 +52,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 </svg>
                                             </button>
                                         </span>
-                                        </Dropdown.Trigger>
+                                        </Dropdown.Trigger>}
 
                                         <Dropdown.Content align="left">
                                             <Dropdown.Link href={route('tutorials.tenzies')} active={route().current('tutorials.tenzies')}>

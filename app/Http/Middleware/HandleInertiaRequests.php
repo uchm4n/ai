@@ -35,6 +35,8 @@ class HandleInertiaRequests extends Middleware
 			'auth'        => [
 				'user' => $request->user(),
 			],
+			'appName' => config('app.name'),
+			'appEnv' => config('app.env'),
 			'breadcrumbs' => function () use ($request) {
 				return str($request->getRequestUri())->explode('/')->map(function ($item) use ($request) {
 					if (empty($item)) {
