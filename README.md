@@ -5,7 +5,7 @@ Response is being streamed to the client in real-time.
 
 ### Technology stack
 
-Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL, Docker, Selenium, Prism, Dusk
+Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL (pgVector), Docker, Selenium, Prism, Dusk
 
 ### TODO
 
