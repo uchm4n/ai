@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
+    const appEnv = usePage().props.appEnv;
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (
@@ -29,7 +30,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                 <div className="inline-flex items-center border-b-2 pt-1 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none ">
                                     <Dropdown>
-                                        {usePage().props.appEnv && <Dropdown.Trigger>
+                                        {appEnv === 'local' && <Dropdown.Trigger>
                                         <span className="inline-flex">
                                             <button
                                                 type="button"
