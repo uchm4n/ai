@@ -1,87 +1,112 @@
 import {Head, Link} from '@inertiajs/react';
+import {Col, Divider, Row} from "antd";
+import img from '/resources/img/1.gif';
+import Text from "antd/es/typography/Text.js";
 
-export default function Welcome({auth, laravelVersion, phpVersion}) {
-    const handleImageError = () => {
-        document
-            .getElementById('screenshot-container')
-            ?.classList.add('!hidden');
-        document.getElementById('docs-card')?.classList.add('!row-span-1');
-        document
-            .getElementById('docs-card-content')
-            ?.classList.add('!flex-row');
-        document.getElementById('background')?.classList.add('!hidden');
-    };
-
+export default function Welcome({auth, laravelVersion, phpVersion, appName, appEnv}) {
     return (
         <>
             <Head title="Welcome"/>
-            <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+            <Row>
+                <Col span={24}>
 
-                <div
-                    className="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
-                    <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                        <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
-                            <div className="flex lg:col-start-2 lg:justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor" className="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]">
-                                    <path
-                                        d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"></path>
-                                </svg>
+                    <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+
+                        <div className="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
+                            <div className="relative w-full max-w-2xl px-6 lg:max-w-7xl">
+                                <Row>
+                                    <Col span={24}>
+                                        <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
+                                            <div className="flex lg:col-start-2 lg:justify-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                     viewBox="0 0 24 24"
+                                                     stroke="currentColor" className="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]">
+                                                    <path
+                                                        d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"></path>
+                                                </svg>
+                                            </div>
+                                            <nav className="-mx-3 flex flex-1 justify-end">
+                                                {auth.user ? (
+                                                    <Link
+                                                        href={route('dashboard')}
+                                                        className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                                    >
+                                                        Dashboard
+                                                    </Link>
+                                                ) : (
+                                                    <>
+                                                        <Link
+                                                            href={route('login')}
+                                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                                        >
+                                                            Log in
+                                                        </Link>
+                                                        <Link
+                                                            href={route('register')}
+                                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                                        >
+                                                            Register
+                                                        </Link>
+                                                    </>
+                                                )}
+                                            </nav>
+                                        </header>
+                                    </Col>
+                                </Row>
+
+                                <Row className=" rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
+                                    <Col span={24} className="flex flex-col items-center ">
+                                        <div className="w-2/3 p-3 sm:pt-5">
+                                            <div className=" flex items-center gap-4">
+                                                <h2 className="text-xl font-semibold  text-black dark:text-white">
+                                                    {appName && appName} Project
+                                                </h2>
+                                                <svg height="20px" width="20px" version="1.1" id="_x32_"
+                                                     xmlns="http://www.w3.org/2000/svg"
+                                                     viewBox="0 0 512 512"
+                                                     fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round"
+                                                       strokeLinejoin="round"></g>
+                                                    <g id="SVGRepo_iconCarrier">
+                                                        <g> <path className="st0"
+                                                                  d="M256.002,280.362c13.45,0,24.358-10.904,24.358-24.358c0-13.446-10.908-24.35-24.358-24.35 c-13.454,0-24.358,10.904-24.358,24.35C231.644,269.459,242.548,280.362,256.002,280.362z"></path>
+                                                            <path className="st0"
+                                                                  d="M416.259,205.945c0,13.463,10.904,24.367,24.358,24.367c13.45,0,24.359-10.904,24.359-24.367 c0-13.437-10.908-24.349-24.359-24.349C427.163,181.596,416.259,192.508,416.259,205.945z"></path>
+                                                            <path className="st0"
+                                                                  d="M405.161,255.979c7.23-6.157,14.206-12.314,20.642-18.446c0.189-0.178,0.363-0.355,0.548-0.533 c-6.14-2.829-11.284-7.424-14.814-13.133c-6.76,6.41-14.096,12.906-21.811,19.401c-15.388-12.239-32.044-24.316-49.523-35.904 c-1.301-20.946-3.442-41.402-6.343-60.845c0.384-0.144,0.781-0.304,1.165-0.439c35.752-12.93,68.37-20.321,91.541-20.27 c9.523-0.018,17.365,1.242,22.99,3.429c5.676,2.221,8.991,5.017,11.09,8.606c1.507,2.644,2.28,5.54,2.297,9.29 c0.08,6.748-3.032,16.25-9.451,27.154c6.292,2.567,11.656,6.934,15.426,12.482c8.395-13.614,13.628-26.706,13.716-39.636 c0.018-6.655-1.545-13.294-4.932-19.13c-4.67-8.142-12.323-13.826-21.086-17.154c-8.804-3.37-18.881-4.721-30.05-4.738 c-26.541,0.05-59.746,7.804-95.996,20.675c-2.774-15.085-5.992-29.426-9.734-42.568c-6.795-23.75-15.038-43.834-25.274-58.75 c-5.14-7.449-10.815-13.648-17.382-18.192c-6.528-4.527-14.155-7.297-22.179-7.28c-8.024-0.016-15.654,2.754-22.183,7.28 c-11.461,7.99-20.334,20.845-28.087,37.07c-10.359,21.9-18.442,50.329-24.346,82.457c-7.631-2.702-15.156-5.219-22.487-7.458 c0,0.152,0.022,0.296,0.022,0.448c0,6.807-2.019,13.142-5.461,18.48c7.639,2.323,15.482,4.898,23.514,7.804 c0.409,0.152,0.832,0.322,1.245,0.465c-2.905,19.442-5.013,39.856-6.318,60.802c-17.517,11.613-34.185,23.7-49.598,35.955 c-7.982-6.706-15.587-13.404-22.525-20.026c-16.034-15.261-29.029-30.118-37.774-43.378c-8.813-13.242-13.045-24.881-12.948-32.762 c0.017-3.75,0.79-6.646,2.294-9.282l-1.229,2.128l1.233-2.137c2.098-3.589,5.409-6.385,11.089-8.606 c5.625-2.179,13.467-3.438,22.99-3.42c1.803,0,3.762,0.118,5.675,0.202c-0.371-2.018-0.591-4.096-0.591-6.224 c0-4.746,0.976-9.274,2.728-13.387c-2.644-0.135-5.287-0.278-7.812-0.287c-11.17,0.009-21.246,1.36-30.055,4.739 c-8.759,3.319-16.407,9.003-21.081,17.145c-3.391,5.845-4.95,12.475-4.932,19.13c0.097,14.189,6.339,28.547,16.203,43.606 c13.754,20.794,35.157,43.04,61.262,65.286c-7.225,6.149-14.202,12.315-20.637,18.438c-16.79,16.005-30.684,31.756-40.625,46.79 c-9.864,15.059-16.106,29.418-16.203,43.606c-0.017,6.664,1.541,13.294,4.932,19.138c4.674,8.142,12.322,13.818,21.081,17.145 c8.808,3.37,18.889,4.73,30.059,4.738c26.541-0.042,59.746-7.796,95.996-20.675c2.483,13.445,5.346,26.258,8.594,38.201 c4.954-2.805,10.654-4.409,16.736-4.409c0.823,0,1.634,0.068,2.441,0.119c-3.45-12.568-6.478-26.352-9.062-40.93 c18.285-7.212,37.082-15.591,55.861-24.932c18.762,9.333,37.538,17.703,55.806,24.907c-2.8,15.836-6.077,30.802-9.907,44.223 c-6.376,22.458-14.206,40.904-22.555,52.973c-4.155,6.038-8.399,10.439-12.331,13.142c-3.974,2.703-7.428,3.784-11.014,3.801 c-3.59-0.017-7.04-1.098-11.014-3.801c-3.932-2.652-8.121-7.12-12.259-13.099c-4.312,5.034-10.05,8.784-16.592,10.659 c0.102,0.152,0.198,0.321,0.3,0.473c5.139,7.44,10.815,13.648,17.382,18.184c6.529,4.527,14.16,7.305,22.183,7.28 c8.024,0.025,15.65-2.753,22.179-7.28c11.461-7.981,20.334-20.853,28.083-37.069c10.363-21.883,18.438-50.304,24.341-82.432 c36.233,12.872,69.426,20.625,95.954,20.668c11.174-0.009,21.25-1.368,30.058-4.738c8.763-3.327,16.411-9.003,21.086-17.145 c3.387-5.845,4.95-12.475,4.932-19.138c-0.097-14.189-6.338-28.548-16.207-43.606C452.67,300.472,431.272,278.217,405.161,255.979z M374.072,256.022c-10.384,8.133-21.368,16.208-32.796,24.112c0.245-8.024,0.469-16.073,0.469-24.13 c-0.004-8.032-0.139-16.064-0.384-24.071C352.771,239.83,363.705,247.896,374.072,256.022z M189.943,256.004 c-0.004-12.576,0.384-25.143,0.996-37.61c10.464-6.74,21.157-13.32,32.031-19.594c10.882-6.284,21.938-12.264,33.028-17.956 c11.09,5.692,22.145,11.672,33.028,17.956c10.857,6.266,21.541,12.828,31.989,19.56c0.616,12.482,1.039,25.042,1.039,37.643 c0.004,12.576-0.384,25.143-0.996,37.609c-10.465,6.74-21.157,13.32-32.031,19.595c-10.883,6.283-21.938,12.263-33.028,17.956 c-11.085-5.693-22.141-11.672-33.023-17.956c-10.857-6.267-21.546-12.829-31.993-19.569 C190.365,281.165,189.943,268.605,189.943,256.004z M319.49,194.113c-6.803-4.215-13.67-8.362-20.621-12.374 c-6.964-4.02-13.999-7.888-21.06-11.69c12.504-5.912,24.924-11.334,37.107-16.241C316.771,166.858,318.358,180.27,319.49,194.113z M210.099,89.612c6.377-22.45,14.206-40.896,22.555-52.973c4.156-6.04,8.404-10.44,12.335-13.134 c3.974-2.711,7.424-3.792,11.014-3.809c3.585,0.016,7.04,1.098,11.014,3.809c6.913,4.67,14.641,14.789,21.457,29.282 c9.611,20.22,17.648,48.607,23.382,81.031c-18.285,7.213-37.078,15.574-55.857,24.915c-18.762-9.324-37.538-17.694-55.81-24.898 C202.992,118.007,206.269,103.032,210.099,89.612z M197.012,153.784c12.208,4.915,24.645,10.338,37.179,16.266 c-7.061,3.801-14.1,7.67-21.064,11.69c-6.947,4.012-13.809,8.159-20.608,12.365C193.65,180.286,195.162,166.807,197.012,153.784z M170.72,231.875c-0.249,8.023-0.473,16.072-0.473,24.13c0,8.04,0.148,16.072,0.397,24.071 c-11.41-7.897-22.348-15.963-32.715-24.087C148.308,247.854,159.292,239.78,170.72,231.875z M176.974,365.928 c-35.752,12.931-68.366,20.312-91.537,20.27c-9.523,0.008-17.364-1.25-22.994-3.437c-5.676-2.213-8.991-5.017-11.089-8.607 c-1.508-2.643-2.281-5.54-2.298-9.29c-0.097-7.871,4.135-19.51,12.948-32.753c12.525-19.02,33.834-41.207,60.253-63.387 c15.397,12.239,32.065,24.333,49.556,35.929c1.313,20.921,3.408,41.41,6.322,60.836 C177.751,365.632,177.358,365.792,176.974,365.928z M197.08,358.191c-1.858-13.049-3.442-26.46-4.578-40.304 c6.808,4.206,13.674,8.362,20.629,12.373c6.964,4.021,14.004,7.889,21.064,11.681C221.686,347.871,209.267,353.285,197.08,358.191z M277.806,341.941c7.061-3.784,14.1-7.66,21.064-11.681c6.947-4.011,13.809-8.158,20.608-12.364 c-1.132,13.817-2.644,27.288-4.493,40.321C302.776,353.301,290.339,347.871,277.806,341.941z M460.647,374.154 c-2.099,3.59-5.414,6.394-11.09,8.615c-5.633,2.18-13.476,3.438-22.998,3.429c-23.168,0.042-55.786-7.339-91.533-20.278 c-0.414-0.144-0.836-0.321-1.25-0.464c2.901-19.443,5.013-39.856,6.318-60.794c17.517-11.613,34.185-23.699,49.599-35.954 c7.981,6.706,15.586,13.404,22.529,20.016c16.034,15.27,29.029,30.127,37.774,43.387c8.814,13.244,13.045,24.882,12.948,32.753 C462.927,368.614,462.159,371.511,460.647,374.154z"></path>
+                                                            <path className="st0"
+                                                                  d="M124.719,144.155c13.454,0,24.358-10.904,24.358-24.358c0-13.446-10.904-24.358-24.358-24.358 c-13.454,0-24.358,10.912-24.358,24.358C100.361,133.251,111.265,144.155,124.719,144.155z"></path>
+                                                            <path className="st0"
+                                                                  d="M231.121,453.191c0-13.437-10.908-24.349-24.358-24.349c-13.454,0-24.358,10.912-24.358,24.349 c0,13.464,10.904,24.367,24.358,24.367C220.213,477.558,231.121,466.654,231.121,453.191z"></path> </g> </g></svg>
+                                            </div>
+
+                                            <p className="mt-4 text-lg">
+                                                This is the demonstration of the project that utilizes LLM models (Phi4
+                                                and DeepSeek) with predetermined parameters. Response is being streamed
+                                                to the client in real-time.
+                                            </p>
+                                        </div>
+                                        <Divider/>
+                                        <div className="w-2/3 p-3 sm:pt-5">
+                                            <h3 className="text-sm font-semibold text-black dark:text-white">Demo</h3>
+                                            <img alt="" src={img}/>
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col span={24}>
+                                        <footer className="py-16 text-center text-sm text-black dark:text-white/70">
+                                            {appEnv === 'local' && `Version: ${laravelVersion} (PHP v${phpVersion})`}
+                                        </footer>
+                                    </Col>
+                                </Row>
                             </div>
-                            <nav className="-mx-3 flex flex-1 justify-end">
-                                {auth.user ? (
-                                    <Link
-                                        href={route('dashboard')}
-                                        className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                    >
-                                        Dashboard
-                                    </Link>
-                                ) : (
-                                    <>
-                                        <Link
-                                            href={route('login')}
-                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                        >
-                                            Log in
-                                        </Link>
-                                        <Link
-                                            href={route('register')}
-                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                                        >
-                                            Register
-                                        </Link>
-                                    </>
-                                )}
-                            </nav>
-                        </header>
-
-                        <main className="mt-6">
-                            <div className="grid gap-6 grid-cols-1 justify-items-center">
-
-                                <div
-                                    className="w-[50%] flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]">
-                                    <div className="pt-3 sm:pt-5">
-                                        <h2 className="text-xl font-semibold text-black dark:text-white">
-                                            Ai Project
-                                        </h2>
-
-                                        <p className="mt-4 text-sm/relaxed">
-                                            This is the demonstration of the project that utilizes LLM models (Phi4 and DeepSeek) with predetermined parameters. Response is being streamed to the client in real-time.
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </main>
-
-                        <footer className="py-16 text-center text-sm text-black dark:text-white/70">
-                            Version: {laravelVersion} (PHP v{phpVersion})
-                        </footer>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </Col>
+            </Row>
+
+
         </>
     );
 }
