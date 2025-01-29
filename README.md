@@ -16,8 +16,7 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL, Docker, Selenium, Prism, D
 
 ### Demo
 
-<h4>[nuc.ge](https://nuc.ge/)</h3>
-
+<a href="https://nuc.ge/" target="_blank">nuc.ge</a>
 
 ![1.gif](resources/img/1.gif)
 
