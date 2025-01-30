@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Tools\SearchTool;
+use App\Models\User;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Text\PendingRequest;
@@ -43,11 +45,24 @@ class Ollama extends Command
 	 */
 	public function handle()
 	{
-		$prism = Prism::text()->using(Provider::Ollama, $this->model);
+		$prism = Prism::text()
+			// ->withTools([new SearchTool()])
+			->withMaxSteps(5)
+			->withClientOptions(['timeout' => 120])
+			->using(Provider::Ollama, $this->model);
+
+		//define user
+		$this->userProfile();
 
 		while (true) {
 			$this->chat($prism);
 		}
+	}
+
+	public function userProfile(): void
+	{
+		$user = User::query()->where('email','uchm4n@gmail.com')->first();
+		$this->messages->push(new UserMessage("Name: $user->name | Email: $user->email"));
 	}
 
 	public function chat(PendingRequest $prism): void
