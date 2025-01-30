@@ -52,7 +52,7 @@ class Ollama extends Command
 
 	public function chat(PendingRequest $prism): void
 	{
-		$txt = textarea("Ask Ollama " . strtoupper($this->model) . " Question", 'Type your question here', rows: 10);
+		$txt = textarea("Ask Ollama " . strtoupper($this->model), 'Type your question here', rows: 10);
 
 		$this->messages->push(new UserMessage($txt));
 
