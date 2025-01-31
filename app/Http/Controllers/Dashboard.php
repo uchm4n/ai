@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Console\Tools\Models;
+use App\Console\Tools\SearchTool;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Prism;
 use Illuminate\Http\Request;
@@ -12,6 +14,8 @@ use Throwable;
 
 class Dashboard extends Controller
 {
+	protected string $model = Models::Qwen->value;
+
 	public function index()
 	{
 		return Inertia::render('Dashboard');
@@ -25,28 +29,13 @@ class Dashboard extends Controller
 			}
 			$request->validate(['promptInput' => 'required|string|min:5',]);
 
-			// 2. Redis Query equivalent array in php
-			// 3. Laravel Query equivalent in php
-			$ai = Prism::text()
-				->using(Provider::Ollama, 'phi4')
-				->withSystemPrompt(
-					"
-					Answer shot and concise.
-					Respond every request with a raw markdown text.
-					You are an expert in SQL, Elasticsearch, Redis, and Laravel.
-					[if] string does not REPRESENT SQL QUERY or string is empty then:
-						return: No Data
-					[else if] string REPRESENTS SQL query then:
-						[if] string query syntax is correct and be very strict then:
-							return: 1. Elasticsearch Query equivalent array in php
-						[else if] string is NOT have correct sq query syntax then:
-							return: Check your SQL query syntax!
-						[/if]
-					[/if]
-					",
-				)
-				->withPrompt('Please convert a SQL query to Elasticsearch: ' . $request->get('promptInput'))
+			$ai =  Prism::text()
+				->withTools([new SearchTool()])
+				->withMaxSteps(5)
+				->withSystemPrompt("You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine")
+				->withPrompt($request->get('promptInput'))
 				->withClientOptions(['timeout' => 120])
+				->using(Provider::Ollama, $this->model)
 				->generate();
 
 			return Inertia::render('Dashboard', ['msg' => trim($ai->text), 'status' => Response::HTTP_OK]);
@@ -64,18 +53,10 @@ class Dashboard extends Controller
 			});
 
 			$response = Http::withOptions(['stream' => true])->post('http://localhost:11434/api/generate', [
-				'system' => 'You are a GIRL and your name is Alice, age 40, blonde.Expert on everything. 
-				You are especially good at SQL, Elasticsearch, Redis, and PHP/Laravel.
-				[if] you have any code request then:
-					respond only in markdown format.
-				[else] 
-					respond with a regular text.
-				[/if]',
+				'system' => "You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine",
 				'prompt' => $prompt,
-				// 'model'  => 'deepseek-r1:32b',
-				// "parameters"=> ["temperature"=> 0.0, "top_p"=> 1.0, "max_tokens"=> 100, "stop"=> ["<think></think>"]]
-				'model'  => 'phi4',
-				"parameters"=> ["temperature"=> 0.0, "top_p"=> 1.0, "max_tokens"=> 100]
+				'model'  => Models::Qwen->value,
+				"parameters"=> ["temperature"=> 0.0, "top_p"=> 1.0, "max_tokens"=> 500]
 			]);
 
 			return response()->stream(function () use ($response) {

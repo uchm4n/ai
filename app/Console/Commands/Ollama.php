@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Tools\Models;
 use App\Console\Tools\SearchTool;
 use App\Models\User;
 use EchoLabs\Prism\Enums\Provider;
@@ -29,8 +30,8 @@ class Ollama extends Command
 	 */
 	protected $signature = 'app:ollama';
 
+	protected string $model = Models::Qwen->value;
 
-	protected string $model = 'phi4';
 	protected Collection $messages;
 
 	public function __construct()
@@ -46,13 +47,14 @@ class Ollama extends Command
 	public function handle()
 	{
 		$prism = Prism::text()
-			// ->withTools([new SearchTool()])
+			->withTools([new SearchTool()])
 			->withMaxSteps(5)
+			->withSystemPrompt("You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine")
 			->withClientOptions(['timeout' => 120])
 			->using(Provider::Ollama, $this->model);
 
 		//define user
-		$this->userProfile();
+		// $this->userProfile();
 
 		while (true) {
 			$this->chat($prism);

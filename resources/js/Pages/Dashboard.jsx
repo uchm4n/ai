@@ -16,8 +16,8 @@ export default function Dashboard({msg}) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <Divider dashed style={{ borderColor: '#ef4444' }}>
-                                <Text className="text-lg">Structured
-                                    {' '}<span className="p-2 bg-gray-100 border border-gray-100 rounded rounded-tl-2xl rounded-br-2xl">OR</span>{' '}Chat with AI
+                                <Text className="text-lg">
+                                    Describe your symptoms and <strong>Dr.AI</strong> will help you to diagnose your disease
                                 </Text>
                             </Divider>
                             <AiForm className="max-w-xl"/>

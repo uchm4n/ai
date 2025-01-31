@@ -1,4 +1,4 @@
-ALWAYS ANSWER IN GEORGIAN
+ALWAYS ANSWER IN ENGLISH
 
 <links>
     @foreach($results as $result)

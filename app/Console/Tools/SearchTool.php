@@ -12,12 +12,12 @@ class SearchTool extends Tool
 	{
 		$this
 			->as('search')
-			->for('search for specific drugs and medicine')
+			->for('Search for specific drugs and medicine. Search for pharmacy related subjects.')
 			->withStringParameter('query', 'Detailed search query. Best to search one topic at a time.')
 			->using($this);
 	}
 
-	public function __invoke(string $query)
+	public function __invoke(string $query): string
 	{
 		$result = Drug::where('name', 'like', "%$query%")
 			->orWhere('description', 'like', "%$query%")
