@@ -52,7 +52,7 @@ class Dashboard extends Controller
 				return $request->get('promptInput');
 			});
 
-			$response = Http::withOptions(['stream' => true])->post('http://localhost:11434/api/generate', [
+			$response = Http::withOptions(['stream' => true])->post(env('OLLAMA_URL'). '/api/generate', [
 				'system' => "You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine",
 				'prompt' => $prompt,
 				'model'  => Models::Qwen->value,
