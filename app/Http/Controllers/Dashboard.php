@@ -56,7 +56,7 @@ class Dashboard extends Controller
 				'system' => "You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine",
 				'prompt' => $prompt,
 				'model'  => Models::Qwen->value,
-				"parameters"=> ["temperature"=> 0.0, "top_p"=> 1.0, "max_tokens"=> 500]
+				"parameters"=> ["temperature"=> 5.0, "top_p"=> 1.0, "max_tokens"=> 500]
 			]);
 
 			return response()->stream(function () use ($response) {

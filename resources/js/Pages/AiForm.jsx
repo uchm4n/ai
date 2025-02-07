@@ -80,7 +80,7 @@ export default function AiForm() {
                                     <TextArea placeholder="Press Enter + Shift to send "
                                               allowClear
                                               showCount={true}
-                                              maxLength={2000}
+                                              maxLength={300}
                                               rows={10}
                                               onChange={e => setData('promptInput', e.target.value)}
                                               onKeyDown={e => {
