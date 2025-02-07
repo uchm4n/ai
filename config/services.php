@@ -35,4 +35,22 @@ return [
         ],
     ],
 
+    'github' => [
+	    'client_id' => env('GITHUB_CLIENT_ID'),
+	    'client_secret' => env('GITHUB_CLIENT_SECRET'),
+	    'redirect' => 'http://localhost/callback',
+    ],
+
+    'google' => [
+	    'client_id' => env('SOCIALITE_GOOGLE_CLIENT_ID'),
+	    'client_secret' => env('SOCIALITE_GOOGLE_CLIENT_SECRET'),
+	    'redirect' => env('SOCIALITE_GOOGLE_CLIENT_REDIRECT'),
+    ],
+
+    'facebook' => [
+	    'client_id' => env('SOCIALITE_FACEBOOK_CLIENT_ID'),
+	    'client_secret' => env('SOCIALITE_FACEBOOK_CLIENT_SECRET'),
+	    'redirect' => env('SOCIALITE_FACEBOOK_CLIENT_REDIRECT'),
+    ],
+
 ];
