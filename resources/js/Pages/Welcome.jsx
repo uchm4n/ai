@@ -55,16 +55,31 @@ export default function Welcome({auth, laravelVersion, phpVersion}) {
                                     <Col span={24} className="flex flex-col items-center ">
                                         <div className="w-2/3 p-3 sm:pt-5">
                                             <div className=" flex items-center gap-4">
-                                                <h2 className="text-xl font-semibold  text-black dark:text-white">
-                                                    {appName} Project
+                                                <h2 className="text-xl font-monospace font-medium text-gray-800 dark:text-white mb-3">
+                                                    Welcome to the <strong>{appName}</strong> Project! 🚀
                                                 </h2>
                                             </div>
 
-                                            <p className="mt-4 text-lg">
-                                                This is the demonstration of the project that utilizes LLM models (Phi4
-                                                and DeepSeek) with predetermined parameters. Response is being streamed
-                                                to the client in real-time.
-                                            </p>
+                                            <div className="mt-6  bg-white dark:bg-gray-900 ">
+                                                <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                                                    This project showcases the power of advanced LLM models
+                                                    (
+                                                    <span className="font-semibold text-red-500 dark:text-red-400">Phi4</span>,
+                                                    <span className="font-semibold text-red-500 dark:text-red-400"> DeepSeek</span>
+                                                    <span className="font-semibold text-red-500 dark:text-red-400"> Llama</span>
+                                                    {' '}and
+                                                    <span className="font-semibold text-red-500 dark:text-red-400"> Qwen</span>
+                                                    ) with optimized parameters.
+                                                    Experience real-time AI-driven responses as the system streams answers directly to you.
+                                                </p>
+
+                                                <p className="mt-4 text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+                                                    Simply describe your symptoms, and <span className="font-semibold">{appName} </span>
+                                                    will analyze them to provide the most probable diagnosis along with a detailed explanation.
+
+                                                </p>
+                                                <p className="mt-4 text-gray-700 dark:text-gray-300 text-lg leading-relaxed">Your personal AI-powered health assistant is here to help! 💡🤖</p>
+                                            </div>
                                         </div>
                                         <Divider/>
                                         <div className="w-2/3 p-3 sm:pt-5">

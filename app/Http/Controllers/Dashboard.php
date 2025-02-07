@@ -14,7 +14,7 @@ use Throwable;
 
 class Dashboard extends Controller
 {
-	protected string $model = Models::Qwen->value;
+	protected string $model = Models::Phi4->value;
 
 	public function index()
 	{
@@ -53,10 +53,11 @@ class Dashboard extends Controller
 			});
 
 			$response = Http::withOptions(['stream' => true])->post(env('OLLAMA_URL'). '/api/generate', [
-				'system' => "You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine",
+				'system' => "You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine. 
+							 ALWAYS answer in MARKDOWN format and ALWAYS provide a diagnosis or prescription.",
 				'prompt' => $prompt,
-				'model'  => Models::Qwen->value,
-				"parameters"=> ["temperature"=> 5.0, "top_p"=> 1.0, "max_tokens"=> 500]
+				'model'  => $this->model,
+				"parameters"=> ["temperature"=> 3.0, "top_p"=> 1.0, "max_tokens"=> 500]
 			]);
 
 			return response()->stream(function () use ($response) {

@@ -19,7 +19,7 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL (pgVector), Docker, Seleniu
 <a href="https://nuc.ge/" target="_blank">nuc.ge</a>
 
 <a href="https://nuc.ge/" target="_blank">
-    <img alt="NUC" src="resources/img/1.gif" />
+    <img alt="NUC" src="resources/img/1.gif" width="700"/>
 </a>
 
 
