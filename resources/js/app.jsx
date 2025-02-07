@@ -10,7 +10,7 @@ import {useInitial} from "@/jetbrains_plugin_helper";
 import ComponentPreviews from "@/jetbrains_plugin_helper/previews";
 import {ConfigProvider} from "antd";
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Dr.AI';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

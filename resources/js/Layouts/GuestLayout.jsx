@@ -1,7 +1,20 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Link } from '@inertiajs/react';
+import {Link, router} from '@inertiajs/react';
+import {useEffect} from "react";
 
 export default function GuestLayout({ children }) {
+
+    useEffect(() => {
+        if (import.meta.env.VITE_APP_ENV === "production") {
+            router.on('start', (event) => {
+                gtag('config', import.meta.env.VITE_APP_GA, {
+                    page_path: event.detail.visit.url,
+                });
+            })
+        }
+    }, [])
+
+
     return (
         <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
             <div>

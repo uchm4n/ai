@@ -2,13 +2,23 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import {Link, router, usePage} from '@inertiajs/react';
+import {useEffect, useState} from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
     const appEnv = usePage().props.appEnv;
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
+    useEffect(() => {
+        if (appEnv === "production") {
+            router.on('start', (event) => {
+                gtag('config', import.meta.env.VITE_APP_GA, {
+                    page_path: event.detail.visit.url,
+                });
+            })
+        }
+    }, [])
 
     return (
         <div className="min-h-screen bg-gray-100">
