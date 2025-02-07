@@ -65,7 +65,7 @@ export default function Welcome({auth, laravelVersion, phpVersion}) {
                                                     This project showcases the power of advanced LLM models
                                                     (
                                                     <span className="font-semibold text-red-500 dark:text-red-400">Phi4</span>,
-                                                    <span className="font-semibold text-red-500 dark:text-red-400"> DeepSeek</span>
+                                                    <span className="font-semibold text-red-500 dark:text-red-400"> DeepSeek</span>,
                                                     <span className="font-semibold text-red-500 dark:text-red-400"> Llama</span>
                                                     {' '}and
                                                     <span className="font-semibold text-red-500 dark:text-red-400"> Qwen</span>
