@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Transition} from '@headlessui/react';
 import {useForm} from '@inertiajs/react';
 import {Button, Col, Form, Input, Row, Spin, Switch} from 'antd';
@@ -14,9 +14,10 @@ const {TextArea} = Input;
 export default function AiForm() {
     const [loading, setLoading] = useState(false);
     const [msg, setMsg] = useState('');
-    const [switchToggle, setSwitchToggle] = useState(false);
+    const [switchToggle, setSwitchToggle] = useState(true);
     const {data, setData, post, processing, recentlySuccessful} = useForm({
         promptInput: '',
+        switch: true,
     });
 
 
@@ -24,6 +25,7 @@ export default function AiForm() {
         e.preventDefault();
         setLoading(true);
 
+        // For now always use streamed output, by setting switch to true at the beginning
         if (data.switch) {
             post('/stream', {
                 // preserveState: true, // Prevent modal or page reload
@@ -98,7 +100,7 @@ export default function AiForm() {
                                 </Form.Item>
                             </div>
 
-                            <Row>
+                            {/*<Row>
                                 <Col span={2}>
                                     <div>
                                         <Form.Item label="Stream" name="switch" valuePropName="checked" >
@@ -133,7 +135,7 @@ export default function AiForm() {
                                                 <span>S</span>
                                             </div>
                                 </Col>
-                            </Row>
+                            </Row>*/}
                             <Row>
                                 <Col className="gutter-row" span={2}>
                                     <Button onClick={sendAi} loading={processing} type="default">Send</Button>
