@@ -41,7 +41,6 @@ class Ollama extends Command
 		$this->messages = new Collection();
 	}
 
-
 	/**
 	 * Execute the console command.
 	 */
@@ -54,24 +53,16 @@ class Ollama extends Command
 			->withClientOptions(['timeout' => 120])
 			->using(Provider::Ollama, $this->model);
 
-		//define user
-		$this->userProfile();
-
 		while (true) {
 			$this->chat($prism);
 		}
-	}
-
-	public function userProfile(): void
-	{
-		$user = User::query()->where('email', 'ucha19871@gmail.com')->first();
-		$this->previousMessages($user);
 	}
 
 	public function chat(PendingRequest $prism): void
 	{
 		$txt = textarea("Ask Ollama " . strtoupper($this->model), 'Type your question here', rows: 10);
 
+		$this->previousMessages();
 		$this->messages->push(new UserMessage($txt));
 
 		$answer = $prism->withMessages($this->messages->toArray())->generate();
@@ -85,15 +76,26 @@ class Ollama extends Command
 	 * @param User $user
 	 * @return Collection<UserMessage[]>
 	 */
-	public function previousMessages(User $user): Collection
+	public function previousMessages(): Collection
 	{
+		$user = User::query()->where('email', 'ucha19871@gmail.com')->first();
 		$this->messages->push(new UserMessage("Name: $user->name | Email: $user->email"));
+
+		// TODO: pass messages to the chat history
 		return Messages::query()->where('user_id', $user->id)
-			->take(500)
-			->pluck('response', 'text')
-			->map(function ($response,$txt) {
-				$txt = str($txt)->lower()->trim()->prepend("Me: ")->value();
-				$this->messages->push(new UserMessage($txt, ['response' => $response]));
+			->take(50)
+			->get(['response', 'text'])
+			->flatMap(function ($item) {
+				return [
+					[
+						'role'    => 'user',
+						'content' => str($item->text)->lower()->trim()->value(),
+					],
+					[
+						'role'    => 'assistant',
+						'content' => str($item->response)->lower()->trim()->value(),
+					],
+				];
 			});
 	}
 
