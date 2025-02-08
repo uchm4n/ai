@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Console\Tools\Models;
 use App\Console\Tools\SearchTool;
+use App\Models\Messages;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Prism;
 use Illuminate\Http\Request;
@@ -59,6 +60,13 @@ class Dashboard extends Controller
 				'model'  => $this->model,
 				"parameters"=> ["temperature"=> 3.0, "top_p"=> 1.0, "max_tokens"=> 500]
 			]);
+
+			// Save prompt as a message
+			defer(function () use ($prompt) {
+				auth()->user()->messages()->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
+			});
+
+
 
 			return response()->stream(function () use ($response) {
 				$body = $response->getBody();
