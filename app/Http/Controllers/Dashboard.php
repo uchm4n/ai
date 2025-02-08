@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Console\Tools\Models;
 use App\Console\Tools\SearchTool;
-use App\Models\Messages;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Prism;
 use Illuminate\Http\Request;
@@ -28,7 +27,6 @@ class Dashboard extends Controller
 			if ($request->has('switch') && $request->get('switch')) {
 				abort(404);
 			}
-			$request->validate(['promptInput' => 'required|string|min:5',]);
 
 			$ai =  Prism::text()
 				->withTools([new SearchTool()])
@@ -50,7 +48,14 @@ class Dashboard extends Controller
 		try {
 			// prompt caching for 5 seconds
 			$prompt = cache()->remember('promptInput', 5, function () use ($request) {
-				return $request->get('promptInput');
+				$request->validate(['promptInput' => 'required|string|min:5']);
+				// Save prompt as a message
+				$prompt = $request->get('promptInput');
+				defer(function () use ($prompt) {
+					auth()->user()->messages()->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
+				});
+
+				return $prompt;
 			});
 
 			$response = Http::withOptions(['stream' => true])->post(env('OLLAMA_URL'). '/api/generate', [
@@ -60,13 +65,6 @@ class Dashboard extends Controller
 				'model'  => $this->model,
 				"parameters"=> ["temperature"=> 3.0, "top_p"=> 1.0, "max_tokens"=> 500]
 			]);
-
-			// Save prompt as a message
-			defer(function () use ($prompt) {
-				auth()->user()->messages()->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
-			});
-
-
 
 			return response()->stream(function () use ($response) {
 				$body = $response->getBody();

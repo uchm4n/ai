@@ -24,7 +24,7 @@ createInertiaApp({
 
         root.render(
             <>
-                <StrictMode>
+                {/*<StrictMode>*/}
                     <ConfigProvider
                         theme={{
                             components: {
@@ -46,7 +46,7 @@ createInertiaApp({
                             <App {...props} />
                         </DevSupport>
                     </ConfigProvider>
-                </StrictMode>
+                {/*</StrictMode>*/}
             </>
         );
     },
