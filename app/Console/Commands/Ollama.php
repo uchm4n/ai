@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Console\Tools\Models;
 use App\Console\Tools\SearchTool;
+use App\Models\Messages;
 use App\Models\User;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Prism;
@@ -30,7 +31,7 @@ class Ollama extends Command
 	 */
 	protected $signature = 'app:ollama';
 
-	protected string $model = Models::Qwen->value;
+	protected string $model = Models::Phi4->value;
 
 	protected Collection $messages;
 
@@ -47,14 +48,14 @@ class Ollama extends Command
 	public function handle()
 	{
 		$prism = Prism::text()
-			->withTools([new SearchTool()])
-			->withMaxSteps(5)
+			// ->withTools([new SearchTool()])
+			// ->withMaxSteps(5)
 			->withSystemPrompt("You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine")
 			->withClientOptions(['timeout' => 120])
 			->using(Provider::Ollama, $this->model);
 
 		//define user
-		// $this->userProfile();
+		$this->userProfile();
 
 		while (true) {
 			$this->chat($prism);
@@ -63,8 +64,8 @@ class Ollama extends Command
 
 	public function userProfile(): void
 	{
-		$user = User::query()->where('email','uchm4n@gmail.com')->first();
-		$this->messages->push(new UserMessage("Name: $user->name | Email: $user->email"));
+		$user = User::query()->where('email', 'ucha19871@gmail.com')->first();
+		$this->previousMessages($user);
 	}
 
 	public function chat(PendingRequest $prism): void
@@ -77,6 +78,23 @@ class Ollama extends Command
 		$this->messages->merge($answer->responseMessages);
 
 		$this->box('Response', wordwrap($answer->text), color: 'magenta');
+	}
+
+
+	/**
+	 * @param User $user
+	 * @return Collection<UserMessage[]>
+	 */
+	public function previousMessages(User $user): Collection
+	{
+		$this->messages->push(new UserMessage("Name: $user->name | Email: $user->email"));
+		return Messages::query()->where('user_id', $user->id)
+			->take(500)
+			->pluck('response', 'text')
+			->map(function ($response,$txt) {
+				$txt = str($txt)->lower()->trim()->prepend("Me: ")->value();
+				$this->messages->push(new UserMessage($txt, ['response' => $response]));
+			});
 	}
 
 }

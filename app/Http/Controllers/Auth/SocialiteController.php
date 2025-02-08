@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 use App\Models\User;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
@@ -39,7 +37,6 @@ class SocialiteController extends Controller
 			'socialite'         => $provider,
 			'password'          => Hash::make(env('SOCIALITE_SALT')),
 			'remember_token'    => str()->random(60),
-			'email_verified_at' => Carbon::now()->timestamp,
 		]);
 
 		Auth::login($user);

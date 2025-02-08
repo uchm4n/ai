@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Console\Tools\Models;
 use App\Console\Tools\SearchTool;
+use App\Models\Messages;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Prism;
+use EchoLabs\Prism\Text\PendingRequest;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
@@ -15,6 +19,20 @@ use Throwable;
 class Dashboard extends Controller
 {
 	protected string $model = Models::Phi4->value;
+	protected Builder|HasMany $messages;
+
+	protected array $options = ["temperature" => 0.0, "seed" => 101, "top_p" => 1.0, "max_tokens" => 500];
+	protected string $systemMessage = "You are an expert doctor named Dr.AI, Who can diagnose patients and prescribe medicine. 
+										ALWAYS answer in MARKDOWN format and 
+										ALWAYS provide a diagnosis or prescription.";
+	private ?\Illuminate\Contracts\Auth\Authenticatable $user;
+	private string $strResponse = '';
+
+	public function __construct()
+	{
+		$this->user     = auth()->user();
+		$this->messages = $this->user->messages();
+	}
 
 	public function index()
 	{
@@ -28,11 +46,11 @@ class Dashboard extends Controller
 				abort(404);
 			}
 
-			$ai =  Prism::text()
+			$ai = Prism::text()
 				->withTools([new SearchTool()])
 				->withMaxSteps(5)
-				->withSystemPrompt("You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine")
-				->withPrompt($request->get('promptInput'))
+				->withSystemPrompt($this->systemMessage)
+				->withMessages($request->get('promptInput'))
 				->withClientOptions(['timeout' => 120])
 				->using(Provider::Ollama, $this->model)
 				->generate();
@@ -47,27 +65,23 @@ class Dashboard extends Controller
 	{
 		try {
 			// prompt caching for 5 seconds
-			$prompt = cache()->remember('promptInput', 5, function () use ($request) {
+			[$messageId, $prompt] = cache()->remember('promptInput', 5, function () use ($request) {
 				$request->validate(['promptInput' => 'required|string|min:5']);
-				// Save prompt as a message
-				$prompt = $request->get('promptInput');
-				defer(function () use ($prompt) {
-					$prompt = str($prompt)->lower()->trim()->value();
-					auth()->user()->messages()->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
-				});
-
-				return $prompt;
+				$prompt = str($request->get('promptInput'))->lower()->trim()->value();
+				//save prompt as a message
+				$messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt])->getQueueableId(
+				);
+				return [$messageId, $prompt];
 			});
 
-			$response = Http::withOptions(['stream' => true])->post(env('OLLAMA_URL'). '/api/generate', [
-				'system' => "You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine. 
-							 ALWAYS answer in MARKDOWN format and ALWAYS provide a diagnosis or prescription.",
-				'prompt' => $prompt,
-				'model'  => $this->model,
-				"parameters"=> ["temperature"=> 3.0, "top_p"=> 1.0, "max_tokens"=> 500]
+			$response = Http::withOptions(['stream' => true])->post(env('OLLAMA_URL') . '/api/generate', [
+				'system'  => $this->systemMessage,
+				'prompt'  => $prompt,
+				'model'   => $this->model,
+				'options' => $this->options,
 			]);
 
-			return response()->stream(function () use ($response) {
+			return response()->stream(function () use ($messageId, $response) {
 				$body = $response->getBody();
 
 				while (!$body->eof()) {
@@ -77,7 +91,8 @@ class Dashboard extends Controller
 
 						// Proper SSE format with JSON data
 						echo "data: " . json_encode(['msg' => $strResponse]) . PHP_EOL . PHP_EOL;
-						logger([$strResponse]);
+						$this->strResponse .= $strResponse;
+
 						// Flush output buffer
 						ob_flush();
 						flush();
@@ -86,6 +101,9 @@ class Dashboard extends Controller
 					// Optional: Add slight delay if needed
 					// usleep(1000);
 				}
+
+				//save response as a message, append to the previous messages
+				$this->appendToMessageResponse($messageId, $this->strResponse);
 			},
 				200,
 				[
@@ -98,5 +116,67 @@ class Dashboard extends Controller
 		} catch (\Exception $e) {
 			return response()->json(['error' => $e->getMessage()], 500);
 		}
+	}
+
+
+	/**
+	 * TODO: Waiting for the next release of Prism package
+	 *      Specifically Prism::textSteam() feature
+	 * @param string $prompt
+	 * @return mixed
+	 */
+	private function previousMessagesWithPrompt(string $prompt)
+	{
+		$prompt = str($prompt)->lower()->trim()->value();
+		$msg    = $this->messages
+			->take(50)
+			->get(['response', 'text'])
+			->flatMap(function ($item) {
+				return [
+					[
+						'role'    => 'user',
+						'content' => str($item->text)->lower()->trim()->value(),
+					],
+					[
+						'role'    => 'assistant',
+						'content' => str($item->response)->lower()->trim()->value(),
+					],
+				];
+			})->merge([
+				[
+					'role'    => 'user',
+					'content' => $prompt,
+				],
+			]);
+
+		//save prompt as a message
+		defer(fn() => $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt]));
+
+		return $msg->toArray();
+	}
+
+	/**
+	 * TODO: Waiting for the next release of Prism package
+	 *       Specifically Prism::textSteam() feature
+	 * @return PendingRequest
+	 */
+	private function prismFactory(): PendingRequest
+	{
+		return Prism::text()
+			->withSystemPrompt($this->systemMessage)
+			->withClientOptions(['timeout' => 120])
+			->using(Provider::Ollama, $this->model);
+	}
+
+	/**
+	 * @param int $messageId
+	 * @param string $newResponse
+	 * @return void
+	 */
+	private function appendToMessageResponse(int $messageId, string $newResponse): void
+	{
+		$message           = Messages::findOrFail($messageId);
+		$message->response = $newResponse;
+		$message->save();
 	}
 }

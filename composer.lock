@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e24bd7b68e7065774db5eea968b2b00",
+    "content-hash": "41db1f4079c6f759ec43d5135c55cf26",
     "packages": [
         {
             "name": "brick/math",
@@ -445,16 +445,16 @@
         },
         {
             "name": "echolabsdev/prism",
-            "version": "v0.30.0",
+            "version": "v0.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/echolabsdev/prism.git",
-                "reference": "d66738aa9e932ab99222baab01e1bdf7df2b20fb"
+                "reference": "cfb62e09ac6dc5b8f19e1be917bb7923d74f2894"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/echolabsdev/prism/zipball/d66738aa9e932ab99222baab01e1bdf7df2b20fb",
-                "reference": "d66738aa9e932ab99222baab01e1bdf7df2b20fb",
+                "url": "https://api.github.com/repos/echolabsdev/prism/zipball/cfb62e09ac6dc5b8f19e1be917bb7923d74f2894",
+                "reference": "cfb62e09ac6dc5b8f19e1be917bb7923d74f2894",
                 "shasum": ""
             },
             "require": {
@@ -506,7 +506,7 @@
             "description": "A powerful Laravel package for integrating Large Language Models (LLMs) into your applications.",
             "support": {
                 "issues": "https://github.com/echolabsdev/prism/issues",
-                "source": "https://github.com/echolabsdev/prism/tree/v0.30.0"
+                "source": "https://github.com/echolabsdev/prism/tree/v0.34.0"
             },
             "funding": [
                 {
@@ -514,7 +514,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-20T20:58:40+00:00"
+            "time": "2025-02-02T23:16:04+00:00"
         },
         {
             "name": "egulias/email-validator",
