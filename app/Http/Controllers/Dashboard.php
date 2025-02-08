@@ -52,6 +52,7 @@ class Dashboard extends Controller
 				// Save prompt as a message
 				$prompt = $request->get('promptInput');
 				defer(function () use ($prompt) {
+					$prompt = str($prompt)->lower()->trim()->value();
 					auth()->user()->messages()->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
 				});
 

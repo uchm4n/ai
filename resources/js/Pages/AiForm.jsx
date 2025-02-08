@@ -94,7 +94,6 @@ export default function AiForm() {
 
                                                   if (e.code === 'Enter' && e.shiftKey) {
                                                       sendAi(e)
-                                                      setData('promptInput', null)
                                                   }
                                               }}
                                     />
