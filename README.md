@@ -10,7 +10,7 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL (pgVector), Docker, Seleniu
 ### TODO
 
 - [x] Use vector database for embeddings
-- [ ] Use LLM models for embeddings
+- [x] Use LLM models for embeddings. RAG
 - [x] Scape data from the web
 - [ ] Output `specialized` data based on the scraped data + LLM embeddings
 

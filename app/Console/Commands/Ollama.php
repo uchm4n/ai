@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\Tools\Models;
-use App\Console\Tools\SearchTool;
+use App\Models\Embedding;
 use App\Models\Messages;
 use App\Models\User;
 use EchoLabs\Prism\Enums\Provider;
@@ -46,12 +46,90 @@ class Ollama extends Command
 	 */
 	public function handle()
 	{
-		$prism = Prism::text()
-			// ->withTools([new SearchTool()])
-			// ->withMaxSteps(5)
-			->withSystemPrompt("You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine")
-			->withClientOptions(['timeout' => 120])
-			->using(Provider::Ollama, $this->model);
+		// $prism = Prism::text()
+		// 	// ->withTools([new SearchTool()])
+		// 	// ->withMaxSteps(5)
+		// 	->withSystemPrompt("You are an expert doctor named Dr.AI, who can diagnose patients and prescribe medicine")
+		// 	->withClientOptions(['timeout' => 120])
+		// 	->using(Provider::Ollama, $this->model);
+
+		try {
+
+			// fetch embeddings from the database
+			// $drug = Drug::query()->first();
+			$prism = Prism::embeddings()->using(Provider::Ollama, Models::Nomic->value);
+			$inputText = 'რა მივიღოთ ალერგის დროს';
+			$embedding = $prism->fromInput($inputText)->generate();
+
+			$inputVector = '[' . implode(',', last($embedding->embeddings)) . ']';
+			// dd($inputVector);
+
+			$nearest = Embedding::query()->whereRaw("embedding <=> '$inputVector' < 0.18")
+				->limit(5)
+				->pluck('source')
+				->first()
+
+			// $nearest = Embedding::query()
+			// 	->orderByRaw("embedding <=> '$inputVector'")
+			// 	->limit(5)
+			// 	->pluck('source')
+			// 	->first()
+			;
+
+
+
+			$out = Prism::text()->using(Provider::Ollama, Models::Phi4->value)
+				->withPrompt("Question: $inputText\n Answer: $nearest")
+				->generate();
+
+			dd($out->text);
+			// $drug = Drug::query()->pluck('all')->lazy()->each(function ($drug,$k) {
+			//
+			// 	$chunks = str($drug)
+			// 		->explode(PHP_EOL)
+			// 		->filter(fn($str) => !blank($str))
+			// 		// ->implode(PHP_EOL);
+			//
+			// 		->reduce(function ($carry, $line) {
+			// 			// Get the last chunk
+			// 			$lastChunkIndex = count($carry) - 1;
+			//
+			// 			// If the last chunk + new line is within limit, append to it
+			// 			if ($lastChunkIndex >= 0 && Str::length($carry[$lastChunkIndex] . ' ' . $line) <= 2024) {
+			// 				$carry[$lastChunkIndex] .= ' ' . $line;
+			// 			} else {
+			// 				// Otherwise, start a new chunk
+			// 				$carry[] = $line;
+			// 			}
+			//
+			// 			return $carry;
+			// 		}, []);
+			//
+			// 	// dd($chunks); // Array of text chunks, each <= 2048 characters
+			// 	$prism = Prism::embeddings()->using(Provider::Ollama, Models::Nomic->value);
+			// 	// dd($prism->fromInput($chunks)->generate());
+			//
+			// 	collect($chunks)->map(function ($chunk) use ($prism) {
+			// 		return [
+			// 			'source' => $chunk,
+			// 			'embedding' => last($prism->fromInput($chunk)->generate()->embeddings)
+			// 		];
+			// 	})->each(function ($item) {
+			// 		Embedding::query()->create([
+			// 			'source' => $item['source'],
+			// 			'embedding' => json_encode($item['embedding']),
+			// 		]);
+			// 	});
+			//
+			// 	$this->info('inserted:' . $k);
+			// });
+
+
+			dd('Done!');
+		} catch (\Throwable $th) {
+			//throw $th;
+			dd($th->getMessage(), $th->getFile());
+		}
 
 		while (true) {
 			$this->chat($prism);
