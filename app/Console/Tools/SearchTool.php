@@ -3,7 +3,7 @@
 namespace App\Console\Tools;
 
 use App\Models\Drug;
-use EchoLabs\Prism\Tool;
+use Prism\Prism\Tool;
 
 class SearchTool extends Tool
 {

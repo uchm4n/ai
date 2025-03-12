@@ -5,15 +5,15 @@ namespace App\Http\Controllers;
 use App\Console\Tools\Models;
 use App\Console\Tools\SearchTool;
 use App\Models\Messages;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Prism;
-use EchoLabs\Prism\Text\PendingRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
+use Prism\Prism\Text\PendingRequest;
 use Throwable;
 
 class Dashboard extends Controller
@@ -47,7 +47,7 @@ class Dashboard extends Controller
 			}
 
 			$ai = Prism::text()
-				->withTools([new SearchTool()])
+				// ->withTools([new SearchTool()])
 				->withMaxSteps(5)
 				->withSystemPrompt($this->systemMessage)
 				->withMessages($request->get('promptInput'))

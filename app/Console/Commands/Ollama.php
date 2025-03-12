@@ -6,14 +6,14 @@ use App\Console\Tools\Models;
 use App\Models\Embedding;
 use App\Models\Messages;
 use App\Models\User;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Prism;
-use EchoLabs\Prism\Text\PendingRequest;
-use EchoLabs\Prism\ValueObjects\Messages\UserMessage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\Concerns\Colors;
 use Laravel\Prompts\Themes\Default\Concerns\DrawsBoxes;
+use Prism\Prism\Prism;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Text\PendingRequest;
+use Prism\Prism\ValueObjects\Messages\UserMessage;
 
 use function Laravel\Prompts\textarea;
 
