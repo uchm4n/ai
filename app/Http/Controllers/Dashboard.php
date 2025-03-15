@@ -74,7 +74,7 @@ class Dashboard extends Controller
 				return [$messageId, $prompt];
 			});
 
-			$response = Http::withOptions(['stream' => true])->post(env('OLLAMA_URL') . '/api/generate', [
+			$response = Http::withOptions(['stream' => true])->post(config('prism.providers.ollama.url') . '/api/generate', [
 				'system'  => $this->systemMessage,
 				'prompt'  => $prompt,
 				'model'   => $this->model,

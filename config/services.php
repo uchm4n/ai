@@ -14,6 +14,10 @@ return [
     |
     */
 
+	'socialite' => [
+		'salt' => env('SOCIALITE_SALT')
+	],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

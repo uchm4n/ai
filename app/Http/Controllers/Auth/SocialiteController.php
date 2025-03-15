@@ -35,7 +35,7 @@ class SocialiteController extends Controller
 			'name'              => $githubUser->getName(),
 			'email'             => $githubUser->getEmail(),
 			'socialite'         => $provider,
-			'password'          => Hash::make(env('SOCIALITE_SALT')),
+			'password'          => Hash::make(config('services.socialite.salt')),
 			'remember_token'    => str()->random(60),
 		]);
 
