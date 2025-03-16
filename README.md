@@ -24,3 +24,4 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL (pgVector), Docker, Seleniu
 
 
 
+
