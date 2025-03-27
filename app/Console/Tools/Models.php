@@ -12,6 +12,6 @@ enum Models: string
 	case Mxbai = "mxbai-embed-large";
 	case Nomic = "nomic-embed-text";
 	case Gemini2_0 = "gemini-2.0-flash";
-	case Gemini2_5 = "";
+	case Gemini2_5 = "gemini-2.5-pro";
 
 }
