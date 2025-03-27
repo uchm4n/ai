@@ -13,6 +13,8 @@ use Laravel\Prompts\Themes\Default\Concerns\DrawsBoxes;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\Prism;
 use Prism\Prism\Enums\Provider;
+use Prism\Prism\Schema\ObjectSchema;
+use Prism\Prism\Schema\StringSchema;
 use Prism\Prism\Text\PendingRequest;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
 
@@ -61,41 +63,58 @@ class Ollama extends Command
 			];
 
 			$response = Prism::text()
-				->using(Provider::Ollama, Models::Mistral->value)
+				->using(Provider::Gemini, Models::Mistral->value)
 				// ->withTools([$weatherTool])
 				// ->withTools($tools)
 				->withMaxSteps(4)
 				->withPrompt('What\'s the weather like in San Francisco today? Should i where the jacket?')
+				// ->withOptions([ // TODO: Planed to add
+				// 	'temperature' => 0.9,
+				// 	'num_predict' => 1000,
+				// 	'top_p' => 0.9,
+				// ])
 				->asStream();
 
+			// Process each chunk as it arrives
+			foreach ($response as $chunk) {
+				// Write each chunk directly to output without buffering
+				$this->output->write($this->green($chunk->text));
+			}
+
+
+			// $schema = new ObjectSchema(
+			// 	name: 'movie_review',
+			// 	description: 'A structured movie review',
+			// 	properties: [
+			// 		new StringSchema('title', 'The movie title'),
+			// 		new StringSchema('rating', 'Rating out of 5 stars'),
+			// 		new StringSchema('summary', 'Brief review summary')
+			// 	],
+			// 	requiredFields: ['title', 'rating', 'summary']
+			// );
+			//
+			// $response = Prism::structured()
+			// 	->using(Provider::Ollama, Models::Mistral->value)
+			// 	->withSchema($schema)
+			// 	->withPrompt('Review the movie Inception')
+			// 	// ->withOptions([
+			// 	// 	'temperature' => 1.9,
+			// 	// 	'num_predict' => 1000,
+			// 	// 	'top_p' => 0.9,
+			// 	// ])
+			// 	->asStructured();
 			// Process each chunk as it arrives
 			// foreach ($response as $chunk) {
 			// 	// Write each chunk directly to output without buffering
 			// 	$this->output->write($this->green($chunk->text));
 			// }
-
-			$fullResponse = '';
-			foreach ($response as $chunk) {
-				// Append each chunk to build the complete response
-				$fullResponse .= $chunk->text;
-
-				if (!$chunk->toolCalls){
-					$this->output->write($this->green($chunk->text));
-				} else if ($chunk->toolCalls) {
-					foreach ($chunk->toolCalls as $call) {
-						$this->output->write($this->dim($call->name .' '));
-					}
-				}
-
-				// Check for tool results
-				if ($chunk->toolResults) {
-					foreach ($chunk->toolResults as $result) {
-						$this->output->write($this->green($result->result));
-					}
-				}
-			}
-
-			$this->output->write($this->green($fullResponse));
+			//
+			// // Access your structured data
+			// $review = $response->structured;
+			// // dd($review);
+			// $this->output->text($this->green($review['title']) . PHP_EOL);
+			// $this->output->text($this->dim($review['rating']) . PHP_EOL);
+			// $this->output->text($this->yellow($review['summary']) . PHP_EOL);
 
 			$this->output->write("\n\n");
 		} catch (\Throwable $th) {

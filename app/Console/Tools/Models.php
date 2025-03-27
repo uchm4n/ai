@@ -11,5 +11,7 @@ enum Models: string
 	case Mistral = "mistral:latest";
 	case Mxbai = "mxbai-embed-large";
 	case Nomic = "nomic-embed-text";
+	case Gemini2_0 = "gemini-2.0-flash";
+	case Gemini2_5 = "";
 
 }
