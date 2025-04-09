@@ -10,6 +10,7 @@ use Laravel\Prompts\Themes\Default\Concerns\DrawsBoxes;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\Prism;
+use Prism\Relay\Facades\Relay;
 
 class Gemini extends Command
 {
@@ -41,37 +42,32 @@ class Gemini extends Command
 	public function handle()
 	{
 		try {
-			// $tools = [
-			// 	Tool::as('weather')
-			// 		->for('useful when you need to search for current weather conditions')
-			// 		->withStringParameter('city', 'The city that you want the weather for')
-			// 		->using(fn (string $city): string => "The weather will be 75° and sunny in {$city}"),
-			//
-			// 	Tool::as('search')
-			// 		->for('useful for searching current events or data')
-			// 		->withStringParameter('query', 'The detailed search query')
-			// 		->using(fn (string $query): string => "Search results for: {$query}"),
-			// ];
+			$tools = [
+				Tool::as('weather')
+					->for('useful when you need to search for current weather conditions')
+					->withStringParameter('city', 'The city that you want the weather for')
+					->using(fn (string $city): string => "The weather will be 75° and sunny in {$city}"),
+
+				Tool::as('history')
+					->for('say history for current city')
+					->withStringParameter('query', 'Tell me a history about the city.')
+					->using(fn (string $query): string => "Here's a little glimpse: {$query} has such a vibrant and interesting past!
+					**Early Days:** Before Europeans arrived, the area was home to the Yelamu tribe. In 1776, Spanish settlers established a presence, founding the Presidio of San Francisco and Mission San Francisco de Asís (named for St. Francis of Assisi). Initially, the area was called Yerba Buena."),
+			];
 
 
 
 			$response = Prism::text()
 				->using(Provider::Gemini, Models::Gemini2_0->value)
-				// ->withTools([$weatherTool])
-				// ->withTools($tools)
 				->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
 				->withMaxSteps(4)
-				->withPrompt('What\'s the weather like in San Francisco today? And tel me a short story about the weather')
-				->usingTemperature(2)
-				// ->withOptions([
-				// 	'temperature' => 0.9,
-				// 	'num_predict' => 1000,
-				// 	'top_p' => 0.9,
-				// ])
+				// ->usingTemperature(2)
+				->withSystemPrompt("You are a sweet weather woman")
+				->withPrompt('What\'s the weather in San Francisco today.')
 				->asStream();
-				// ->asText();
 
 			// dd($response->text);
+
 			// Process each chunk as it arrives
 			foreach ($response as $chunk) {
 				// Write each chunk directly to output without buffering

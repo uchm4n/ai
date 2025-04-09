@@ -63,17 +63,14 @@ class Ollama extends Command
 			];
 
 			$response = Prism::text()
-				->using(Provider::Gemini, Models::Mistral->value)
-				// ->withTools([$weatherTool])
-				// ->withTools($tools)
+				->using(Provider::Ollama, Models::Mistral->value)
+				->withTools($tools)
 				->withMaxSteps(4)
 				->withPrompt('What\'s the weather like in San Francisco today? Should i where the jacket?')
-				// ->withOptions([ // TODO: Planed to add
-				// 	'temperature' => 0.9,
-				// 	'num_predict' => 1000,
-				// 	'top_p' => 0.9,
-				// ])
 				->asStream();
+				// ->asText();
+
+			// dd($response->text);
 
 			// Process each chunk as it arrives
 			foreach ($response as $chunk) {

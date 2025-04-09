@@ -15,7 +15,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.17",
         "laravel/tinker": "^2.9",
-        "prism-php/prism": "^0.50.0",
+        "prism-php/prism": "*@dev",
+        "prism-php/relay": "*@dev",
         "spatie/laravel-web-tinker": "^1.10",
         "tightenco/ziggy": "^2.0"
     },
@@ -39,6 +40,16 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../prism"
+        },
+        {
+            "type": "path",
+            "url": "../relay"
+        }
+    ],
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
