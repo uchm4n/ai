@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Console\Tools\Models;
+use App\Console\Tools\SearchTool;
+use App\Models\Drug;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\Concerns\Colors;
@@ -43,27 +45,23 @@ class Gemini extends Command
 	{
 		try {
 			$tools = [
-				Tool::as('weather')
-					->for('useful when you need to search for current weather conditions')
-					->withStringParameter('city', 'The city that you want the weather for')
-					->using(fn (string $city): string => "The weather will be 75° and sunny in {$city}"),
-
-				Tool::as('history')
-					->for('say history for current city')
-					->withStringParameter('query', 'Tell me a history about the city.')
-					->using(fn (string $query): string => "Here's a little glimpse: {$query} has such a vibrant and interesting past!
-					**Early Days:** Before Europeans arrived, the area was home to the Yelamu tribe. In 1776, Spanish settlers established a presence, founding the Presidio of San Francisco and Mission San Francisco de Asís (named for St. Francis of Assisi). Initially, the area was called Yerba Buena."),
+				Tool::as('drugs')
+					->for('useful when you need to search for drugs and health related information')
+					->withStringParameter('drug', 'The drug that you want the information for')
+					->using(function (string $drug): string {
+						return new SearchTool()->search($drug);
+					}),
 			];
-
-
 
 			$response = Prism::text()
 				->using(Provider::Gemini, Models::Gemini2_0->value)
-				->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
-				->withMaxSteps(4)
+				// ->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
+				->withTools($tools)
+				->withMaxSteps(50)
 				// ->usingTemperature(2)
-				->withSystemPrompt("You are a sweet weather woman")
-				->withPrompt('What\'s the weather in San Francisco today.')
+				->withSystemPrompt("You are a sweet pharmaceutical shop woman. And ALWAYS Answer in Georgian language.")
+				// ->withPrompt('what is the drug called: acc, and how can i take it?')
+				->withPrompt('რა არის წამალი: ვაცენაკი და როგორ მივიღოთ ის?')
 				->asStream();
 
 			// dd($response->text);

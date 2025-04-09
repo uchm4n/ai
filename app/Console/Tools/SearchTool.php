@@ -3,6 +3,7 @@
 namespace App\Console\Tools;
 
 use App\Models\Drug;
+use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Tool;
 
 class SearchTool extends Tool
@@ -14,22 +15,25 @@ class SearchTool extends Tool
 			->as('search')
 			->for('Search for specific drugs and medicine. Search for pharmacy related subjects.')
 			->withStringParameter('query', 'Detailed search query. Best to search one topic at a time.')
-			->using($this);
+			->using(fn() => $this);
 	}
 
-	public function __invoke(string $query): string
+	public function search(string $drug): string
 	{
-		$result = Drug::where('name', 'like', "%$query%")
-			->orWhere('description', 'like', "%$query%")
-			->take(4)
-			->map(function ($item) {
-				return [
-					'title'       => $item->title_ka . '|' . $item->title_en,
-					'substance'   => $item->substance,
-					'description' => $item->all,
-				];
-			});
+		try {
+			$drug   = strtolower($drug);
+			$results = Drug::query()
+				->where('title_en', 'like', "%$drug%")
+				->orWhere('title_ka', 'like', "%$drug%")
+				->orWhere('all', 'like', "%$drug%")
+				->take(2)
+				->get()
+				->toArray();
 
-		return view('prompts.search', compact('result'))->render();
+			return view('prompts.search', compact('results'))->render();
+		} catch (\Exception $e) {
+			// Handle the exception
+			throw new PrismException('Tool Exception: ' . $e->getMessage());
+		}
 	}
 }

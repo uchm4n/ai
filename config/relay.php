@@ -21,6 +21,12 @@ return [
             'timeout' => env('RELAY_PUPPETEER_SERVER_TIMEOUT', 60),
             'env' => [],
         ],
+        'db' => [
+            'transport' => Transport::Stdio,
+            'command' => ['npx', '-y', '@bytebase/dbhub' ,'--transport','--dsn', 'postgres://u:pl,OKMijn@192.168.100.100:5432/udb'],
+            'timeout' => env('RELAY_PUPPETEER_SERVER_TIMEOUT', 60),
+            'env' => [],
+        ],
     ],
 
     /*
