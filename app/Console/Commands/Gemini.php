@@ -54,14 +54,15 @@ class Gemini extends Command
 			];
 
 			$response = Prism::text()
-				->using(Provider::Gemini, Models::Gemini2_0->value)
-				// ->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
-				->withTools($tools)
-				->withMaxSteps(50)
+				->using(Provider::Gemini, Models::Gemini2_5->value)
+				->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
+				// ->withTools($tools)
+				// ->withMaxSteps(50)
 				// ->usingTemperature(2)
-				->withSystemPrompt("You are a sweet pharmaceutical shop woman. And ALWAYS Answer in Georgian language.")
+				// ->withSystemPrompt("You are a sweet pharmaceutical shop woman. And ALWAYS Answer in Georgian language.")
 				// ->withPrompt('what is the drug called: acc, and how can i take it?')
-				->withPrompt('რა არის წამალი: ვაცენაკი და როგორ მივიღოთ ის?')
+				->withPrompt('Explain the concept of quantum entanglement in simple terms. Make it VERY short!')
+				// ->asText();
 				->asStream();
 
 			// dd($response->text);

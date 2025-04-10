@@ -29,6 +29,7 @@ Route::middleware(['auth','verified'])->group(function () {
 	});
 
 	Route::match(['GET','POST'],'/stream', [Dashboard::class, 'stream'])->name('ai.stream');
+	Route::match(['GET','POST'],'/streamG', [Dashboard::class, 'streamG'])->name('ai.streamG');
 	Route::match(['GET','POST'],'/send', [Dashboard::class, 'send'])->name('ai.send');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

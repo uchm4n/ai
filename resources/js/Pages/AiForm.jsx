@@ -27,13 +27,13 @@ export default function AiForm() {
 
         // For now always use streamed output, by setting switch to true at the beginning
         if (data.switch) {
-            post('/stream', {
+            post('/streamG', {
                 // preserveState: true, // Prevent modal or page reload
                 preserveScroll: true,
                 data,
                 onSuccess: (res) => {
                     setMsg('')
-                    const eventSource = new EventSource('/stream');
+                    const eventSource = new EventSource('/streamG');
                     eventSource.onmessage = function (event) {
                         const response = JSON.parse(event.data.trim());
                         // Append the response chunk to your UI

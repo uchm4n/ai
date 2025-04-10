@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Console\Tools\Models;
-use App\Console\Tools\SearchTool;
 use App\Models\Messages;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
@@ -14,6 +14,8 @@ use Inertia\Inertia;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 use Prism\Prism\Text\PendingRequest;
+use Prism\Prism\ValueObjects\Messages\AssistantMessage;
+use Prism\Prism\ValueObjects\Messages\UserMessage;
 use Throwable;
 
 class Dashboard extends Controller
@@ -25,7 +27,7 @@ class Dashboard extends Controller
 	protected string $systemMessage = "You are an expert doctor named Dr.AI, Who can diagnose patients and prescribe medicine. 
 										ALWAYS answer in MARKDOWN format and 
 										ALWAYS provide a diagnosis or prescription.";
-	private ?\Illuminate\Contracts\Auth\Authenticatable $user;
+	private ?Authenticatable $user;
 	private string $strResponse = '';
 
 	public function __construct()
@@ -53,7 +55,7 @@ class Dashboard extends Controller
 				->withMessages($request->get('promptInput'))
 				->withClientOptions(['timeout' => 120])
 				->using(Provider::Ollama, $this->model)
-				->generate();
+				->asText();
 
 			return Inertia::render('Dashboard', ['msg' => trim($ai->text), 'status' => Response::HTTP_OK]);
 		} catch (Throwable $e) {
@@ -74,12 +76,15 @@ class Dashboard extends Controller
 				return [$messageId, $prompt];
 			});
 
-			$response = Http::withOptions(['stream' => true])->post(config('prism.providers.ollama.url') . '/api/generate', [
-				'system'  => $this->systemMessage,
-				'prompt'  => $prompt,
-				'model'   => $this->model,
-				'options' => $this->options,
-			]);
+			$response = Http::withOptions(['stream' => true])->post(
+				config('prism.providers.ollama.url') . '/api/generate',
+				[
+					'system'  => $this->systemMessage,
+					'prompt'  => $prompt,
+					'model'   => $this->model,
+					'options' => $this->options,
+				],
+			);
 
 			return response()->stream(function () use ($messageId, $response) {
 				$body = $response->getBody();
@@ -114,6 +119,51 @@ class Dashboard extends Controller
 				],
 			);
 		} catch (\Exception $e) {
+			return response()->json(['error' => $e->getMessage()], 500);
+		}
+	}
+
+	public function streamG(Request $request)
+	{
+		try {
+			// prompt caching for 5 seconds
+			[$messageId, $prompt, $assistant] = cache()->remember('promptInput', 5, function () use ($request) {
+				$request->validate(['promptInput' => 'required|string|min:5']);
+				$prompt = str($request->get('promptInput'))->lower()->trim()->value();
+				//save prompt as a message
+				$messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
+				return [$messageId->getQueueableId(), $prompt, data_get($messageId->toArray(),'response', '')];
+			});
+
+			// dd($messageId, $prompt, $assistant);
+			return response()->stream(function () use ($messageId, $prompt, $assistant) {
+				$stream = Prism::text()
+					->using(Provider::Gemini, Models::Gemini2_5->value)
+					->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
+					->withSystemPrompt($this->systemMessage)
+					->withMessages([
+						new UserMessage($prompt),
+						// new AssistantMessage($assistant ?? '') // TODO: fix this
+					])
+					// ->withMaxTokens(10000)
+					->asStream();
+
+				foreach ($stream as $chunk) {
+					echo "data: " . json_encode(['msg' => $chunk->text]) . PHP_EOL . PHP_EOL;
+					$this->strResponse .= $chunk->text;
+					ob_flush();
+					flush();
+				}
+
+				//save response as a message, append to the previous messages
+				$this->appendToMessageResponse($messageId, $this->strResponse);
+			}, 200, [
+				'Cache-Control'     => 'no-cache',
+				'Content-Type'      => 'text/event-stream',
+				'X-Accel-Buffering' => 'no', // Prevents Nginx from buffering
+			]);
+		} catch (\Exception $e) {
+			logger()->error($e->getMessage());
 			return response()->json(['error' => $e->getMessage()], 500);
 		}
 	}

@@ -66,7 +66,8 @@ export default function Welcome({auth, laravelVersion, phpVersion}) {
                                                     (
                                                     <span className="font-semibold text-red-500 dark:text-red-400">Phi4</span>,
                                                     <span className="font-semibold text-red-500 dark:text-red-400"> DeepSeek</span>,
-                                                    <span className="font-semibold text-red-500 dark:text-red-400"> Llama</span>
+                                                    <span className="font-semibold text-red-500 dark:text-red-400"> Llama,</span>
+                                                    <span className="font-semibold text-red-500 dark:text-red-400"> Gemini</span>
                                                     {' '}and
                                                     <span className="font-semibold text-red-500 dark:text-red-400"> Qwen</span>
                                                     ) with optimized parameters.
