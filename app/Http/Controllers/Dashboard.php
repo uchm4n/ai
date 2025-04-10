@@ -14,7 +14,6 @@ use Inertia\Inertia;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 use Prism\Prism\Text\PendingRequest;
-use Prism\Prism\ValueObjects\Messages\AssistantMessage;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
 use Throwable;
 
@@ -132,7 +131,7 @@ class Dashboard extends Controller
 				$prompt = str($request->get('promptInput'))->lower()->trim()->value();
 				//save prompt as a message
 				$messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
-				return [$messageId->getQueueableId(), $prompt, data_get($messageId->toArray(),'response', '')];
+				return [$messageId->getQueueableId(), $prompt, data_get($messageId->toArray(), 'response', '')];
 			});
 
 			// dd($messageId, $prompt, $assistant);
