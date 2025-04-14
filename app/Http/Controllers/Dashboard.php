@@ -125,8 +125,8 @@ class Dashboard extends Controller
 	public function streamG(Request $request)
 	{
 		try {
-			// prompt caching for 5 seconds
-			[$messageId, $prompt, $assistant] = cache()->remember('promptInput', 5, function () use ($request) {
+			// prompt caching for 3 seconds
+			[$messageId, $prompt, $assistant] = cache()->remember('promptInput', 3, function () use ($request) {
 				$request->validate(['promptInput' => 'required|string|min:5']);
 				$prompt = str($request->get('promptInput'))->lower()->trim()->value();
 				//save prompt as a message
@@ -144,7 +144,7 @@ class Dashboard extends Controller
 						new UserMessage($prompt),
 						// new AssistantMessage($assistant ?? '') // TODO: fix this
 					])
-					// ->withMaxTokens(10000)
+					->withMaxTokens(8000)
 					->asStream();
 
 				foreach ($stream as $chunk) {
