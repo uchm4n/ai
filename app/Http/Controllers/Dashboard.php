@@ -22,7 +22,7 @@ use Throwable;
 class Dashboard extends Controller
 {
 	protected string $model = Models::Phi4->value;
-	protected Builder|HasMany $messages;
+	protected Builder|HasMany|null $messages;
 
 	protected array $options = ["temperature" => 0.0, "seed" => 101, "top_p" => 1.0, "max_tokens" => 500];
 	protected string $systemMessage = "You are an expert doctor named Dr.AI, Who can diagnose patients and prescribe medicine. 
@@ -34,7 +34,7 @@ class Dashboard extends Controller
 	public function __construct()
 	{
 		$this->user     = auth()->user();
-		$this->messages = $this->user->messages();
+		$this->messages = $this->user?->messages();
 	}
 
 	public function index()
