@@ -2,6 +2,7 @@ import {Head, Link, usePage} from '@inertiajs/react';
 import {Col, Divider, Row} from "antd";
 import img from '/resources/img/1.gif';
 import ApplicationLogo from "@/Components/ApplicationLogo.jsx";
+import TextToSpeechButton from "@/Components/TextToSpeechButton.jsx";
 
 export default function Welcome({auth, laravelVersion, phpVersion}) {
     const {appName, appEnv} = usePage().props;
@@ -55,9 +56,13 @@ export default function Welcome({auth, laravelVersion, phpVersion}) {
                                     <Col span={24} className="flex flex-col items-center ">
                                         <div className="w-2/3 p-3 sm:pt-5">
                                             <div className=" flex items-center gap-4">
-                                                <h2 className="text-xl font-monospace font-medium text-gray-800 dark:text-white mb-3">
-                                                    Welcome to the <strong>{appName}</strong> Project! 🚀
+                                                <h2 className="text-xl font-monospace font-medium text-gray-800 dark:text-white">
+                                                    Welcome to the <strong>{appName}</strong> Project!
                                                 </h2>
+
+                                                <div>
+                                                    <TextToSpeechButton text={'Hello there'}></TextToSpeechButton>
+                                                </div>
                                             </div>
 
                                             <div className="mt-6  bg-white dark:bg-gray-900 ">

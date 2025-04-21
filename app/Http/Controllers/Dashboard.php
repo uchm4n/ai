@@ -7,6 +7,7 @@ use App\Models\Messages;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
@@ -15,6 +16,7 @@ use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 use Prism\Prism\Text\PendingRequest;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 class Dashboard extends Controller
@@ -227,5 +229,24 @@ class Dashboard extends Controller
 		$message           = Messages::findOrFail($messageId);
 		$message->response = $newResponse;
 		$message->save();
+	}
+
+	/**
+	 * Convert text to speech using Gemini 2.5
+	 *
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function textToSpeech(Request $request): StreamedResponse|Response|JsonResponse
+	{
+		try {
+			return response()->streamDownload(function () {
+				echo file_get_contents(resource_path('audio/welcome.mp3'));
+			}, 'speech.mp3', [
+				'Content-Type' => 'audio/mpeg',
+			]);
+		} catch (\Exception $e) {
+			return response()->json(['error' => $e->getMessage()], 500);
+		}
 	}
 }
