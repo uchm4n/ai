@@ -2,7 +2,6 @@ import {Head, Link, usePage} from '@inertiajs/react';
 import {Col, Divider, Row} from "antd";
 import img from '/resources/img/1.gif';
 import ApplicationLogo from "@/Components/ApplicationLogo.jsx";
-import AudioPlayer from "@/Components/HighlightedTextToSpeech.jsx";
 import TextToSpeech from "@/Components/TextToSpeech.jsx";
 import React from "react";
 
