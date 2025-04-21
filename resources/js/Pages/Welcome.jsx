@@ -2,7 +2,9 @@ import {Head, Link, usePage} from '@inertiajs/react';
 import {Col, Divider, Row} from "antd";
 import img from '/resources/img/1.gif';
 import ApplicationLogo from "@/Components/ApplicationLogo.jsx";
-import TextToSpeechButton from "@/Components/TextToSpeechButton.jsx";
+import AudioPlayer from "@/Components/HighlightedTextToSpeech.jsx";
+import TextToSpeech from "@/Components/TextToSpeech.jsx";
+import React from "react";
 
 export default function Welcome({auth, laravelVersion, phpVersion}) {
     const {appName, appEnv} = usePage().props;
@@ -61,11 +63,11 @@ export default function Welcome({auth, laravelVersion, phpVersion}) {
                                                 </h2>
 
                                                 <div>
-                                                    <TextToSpeechButton text={'Hello there'}></TextToSpeechButton>
+                                                    <TextToSpeech />
                                                 </div>
                                             </div>
 
-                                            <div className="mt-6  bg-white dark:bg-gray-900 ">
+                                            <div id="speech" className="mt-6 bg-white dark:bg-gray-900">
                                                 <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
                                                     This project showcases the power of advanced LLM models
                                                     (
