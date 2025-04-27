@@ -9,6 +9,8 @@ enum Models: string
 	case Llama = "llama3.2";
 	case Deepseek = "deepseek-r1:32b";
 	case Mistral = "mistral:latest";
+	case Mistral_Small = "mistral-small-latest";
+	case Mistral_Large = "mistral-large-latest";
 	case Mxbai = "mxbai-embed-large";
 	case Nomic = "nomic-embed-text";
 	case Gemini2_0 = "gemini-2.0-flash";
