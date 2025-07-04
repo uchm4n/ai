@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\StatusCodes;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class Http_Random {
@@ -11,11 +11,12 @@ class Http_Random {
 	 * Invoke the controller
 	 *
 	 * @param Request $request
+	 * @param string $codes Comma-separated list of HTTP status codes
 	 * @return JsonResponse
 	 */
-	public function __invoke(Request $request): JsonResponse
+	public function __invoke(Request $request, string $codes): JsonResponse
 	{
-		$code = str($request->segment(1))
+		$code = str($codes)
 			->explode(',')
 			->random();
 
