@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45a7ddedab3918961ddb1fcd7eee20a9",
+    "content-hash": "87374c9e198c4fe1cc0a72934e08f0fc",
     "packages": [
         {
             "name": "brick/math",
@@ -3165,16 +3165,17 @@
             "dist": {
                 "type": "path",
                 "url": "../prism",
-                "reference": "878a06b56b88c26013f5faa2620fa025ef4498de"
+                "reference": "60d760baffe31fcfac70277a52c32426c1b4ac37"
             },
             "require": {
+                "ext-fileinfo": "*",
                 "laravel/framework": "^11.0|^12.0",
                 "php": "^8.2"
             },
             "require-dev": {
                 "laravel/pint": "^1.14",
                 "mockery/mockery": "^1.6",
-                "orchestra/testbench": "^9.4",
+                "orchestra/testbench": "^10",
                 "pestphp/pest": "^3.0",
                 "pestphp/pest-plugin-arch": "^3.0",
                 "pestphp/pest-plugin-laravel": "^3.0",
@@ -3201,7 +3202,10 @@
             "autoload": {
                 "psr-4": {
                     "Prism\\Prism\\": "src/"
-                }
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
             },
             "autoload-dev": {
                 "psr-4": {
@@ -3209,10 +3213,7 @@
                     "Workbench\\App\\": "workbench/app/",
                     "Workbench\\Database\\Factories\\": "workbench/database/factories/",
                     "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
+                }
             },
             "scripts": {
                 "post-install-cmd": [
@@ -3260,86 +3261,6 @@
                 }
             ],
             "description": "A powerful Laravel package for integrating Large Language Models (LLMs) into your applications.",
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
-            "name": "prism-php/relay",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "../relay",
-                "reference": "2f86fefd661d77da627f2b586c1a1261436d3a26"
-            },
-            "require": {
-                "laravel/framework": "^11.0|^12.0",
-                "php": "^8.3",
-                "prism-php/prism": "dev-main|>=0.56.0 <1.0.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "^7.8",
-                "laravel/pint": "^1.14",
-                "mockery/mockery": "^1.6",
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^3.0",
-                "pestphp/pest-plugin-arch": "^3.0",
-                "pestphp/pest-plugin-laravel": "^3.0",
-                "phpstan/extension-installer": "^1.3",
-                "phpstan/phpstan": "^1.11",
-                "phpstan/phpstan-deprecation-rules": "^1.2",
-                "projektgopher/whisky": "^0.7.0",
-                "rector/rector": "^1.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Prism\\Relay\\RelayServiceProvider"
-                    ],
-                    "aliases": {
-                        "Relay": "Prism\\Relay\\Facades\\Relay"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Prism\\Relay\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "whisky update"
-                ],
-                "post-update-cmd": [
-                    "whisky update"
-                ],
-                "format": [
-                    "@php vendor/bin/pint --ansi",
-                    "@php vendor/bin/rector process --no-diffs"
-                ],
-                "test": [
-                    "@php vendor/bin/pest --parallel"
-                ],
-                "types": [
-                    "@php vendor/bin/phpstan analyse --verbose --ansi"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "TJ MIller",
-                    "email": "hello@echolabs.dev"
-                }
-            ],
-            "description": "A Prism tool for interacting with MCP servers",
             "transport-options": {
                 "relative": true
             }
@@ -10168,8 +10089,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "prism-php/prism": 20,
-        "prism-php/relay": 20
+        "prism-php/prism": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

@@ -15,8 +15,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.17",
         "laravel/tinker": "^2.9",
-        "prism-php/prism": "*@dev",
-        "prism-php/relay": "*@dev",
+        "prism-php/prism": "dev-main",
         "spatie/laravel-web-tinker": "^1.10",
         "tightenco/ziggy": "^2.0"
     },

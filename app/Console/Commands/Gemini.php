@@ -11,7 +11,10 @@ use Laravel\Prompts\Themes\Default\Concerns\DrawsBoxes;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\Prism;
+use Prism\Prism\ValueObjects\Messages\Support\Audio;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
+use Prism\Prism\ValueObjects\Messages\Support\Media;
+use Prism\Prism\ValueObjects\Messages\Support\Video;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
 
 class Gemini extends Command
@@ -54,36 +57,33 @@ class Gemini extends Command
 			];
 
 			$response = Prism::text()
+				// ->using(Provider::Gemini, Models::Gemini2_5->value)
 				->using(Provider::Gemini, Models::Gemini2_5->value)
-				// ->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
+				// ->withProviderOptions(['searchGrounding' => true])
 				// ->withTools($tools)
 				// ->withMaxSteps(50)
-				// ->usingTemperature(2)
+				->usingTemperature(2)
 				// ->withPrompt('what is the drug called: acc, and how can i take it?')
-				->withSystemPrompt("If you see any text in the input file just get text If no text than describe image in short. Always return Image 1, Image 2 .. so on for each image in the input file. If you see any text in the image then return the text in the image. If you see any text in the input file just get text If no text than describe image in short. Always return Image 1, Image 2 .. so on for each image in the input file.")
+				// ->withSystemPrompt("If you see any text in the input file just get text If no text than describe image in short. Always return Image 1, Image 2 .. so on for each image in the input file. If you see any text in the image then return the text in the image. If you see any text in the input file just get text If no text than describe image in short. Always return Image 1, Image 2 .. so on for each image in the input file.")
+				->withSystemPrompt("Keep output short and concise, without fluff.")
 				// ->withPrompt('What do you see in this input file?')
 				// ->withPrompt('Generate bounding boxes for each of the objects in this image in [y_min, x_min, y_max, x_max] format.')
-				// ->withPrompt('Can you summarize this videos? use bullet points')
-				// ->withProviderMeta(Provider::Gemini, [
-				// 	'parts' => [
-				// 		// 'https://www.youtube.com/watch?v=9hE5-98ZeCg',
-				// 		// 'https://live.staticflickr.com/1893/44566807012_d52477be10_b.jpg',
-				// 		// '/Users/u/Downloads/ForBiggerBlazes.mp4',
-				// 		'/Users/u/Downloads/gem.png',
-				// 		'/Users/u/Downloads/300X300.png',
-				// 		// 'https://placehold.co/600x400/000000/FFFFFF.png'
-				// 		// '/Users/u/www/projects/prism/assets/prism-banner.webp'
-				// 	]
-				// ])
+				// ->withPrompt(' use bullet points')
 				->withMessages([
 					new UserMessage(
-						'Description of the image',
+						// 'what is answer in this picture?',
+						// 'what is this video about?',
+						// 'what is this YouTube video about?',
+						'what is it saying in this audio file?',
 						additionalContent: [
-							// Image::fromPath('/Users/u/Downloads/gem.png'),
-							// Image::fromPath('/Users/u/Downloads/300X300.png'),
-							Image::fromUrl('https://live.staticflickr.com/1893/44566807012_d52477be10_b.jpg'),
-							Image::fromUrl('https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'),
-							Image::fromUrl('https://thumbs.dreamstime.com/b/bird-perched-tree-branch-30-36-jpg-5136761.jpg')
+							// Image::fromLocalPath('/Users/u/Desktop/exam.png'),
+							// Media::fromLocalPath('/Users/u/Desktop/exam.png'),
+							// Video::fromUrl('https://www.youtube.com/watch?v=4rwmCRhBTcI'),
+							// Image::fromUrl('https://live.staticflickr.com/1893/44566807012_d52477be10_b.jpg'),
+							// Audio::fromUrl('https://d38nvwmjovqyq6.cloudfront.net/va90web25003/companions/ws_smith/1%20Comparison%20Of%20Vernacular%20And%20Refined%20Speech.mp3'),
+							// Media::fromLocalPath('/Users/u/www/projects/prism/tests/Fixtures/sample-video.mp4'),
+							// Audio::fromLocalPath('/Users/u/www/projects/prism/tests/Fixtures/sample-audio.wav'),
+							// Video::fromUrl('https://www.youtube.com/watch?v=5c5U1ADlU2g'),
 						],
 					),
 				])
