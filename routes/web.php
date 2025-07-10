@@ -4,6 +4,7 @@ use App\Console\Tools\Models;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TutorialsController;
+use App\Mcp\CalculatorElements;
 use App\Models\Drug;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Artisan;
@@ -62,10 +63,16 @@ Route::get('/streaming', function () {
 });
 
 
-// Register a simple tool
-Mcp::tool([\App\Mcp\CalculatorElements::class, 'add'])
-	->name('add_numbers')
-	->description('Add two numbers together');
+////////////// Register MCP tools //////////////////
+///
+Mcp::tool([CalculatorElements::class, 'add'])->description('Add two numbers together')->name('add_numbers');
+// Register a resource with metadata
+Mcp::resource('config://app/settings', [CalculatorElements::class, 'getAppSettings'])
+	->name('app_settings')
+	->description('Application configuration settings')
+	->mimeType('application/json')
+	->size(100);
+////////////// MCP tools //////////////////
 
 
 require __DIR__.'/auth.php';

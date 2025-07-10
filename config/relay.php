@@ -15,8 +15,14 @@ return [
     |
     */
     'servers' => [
+	    'puppeteer' => [
+		    'command' => ['npx', '-y', '@modelcontextprotocol/server-puppeteer'],
+		    'timeout' => 30,
+		    'env' => [],
+		    'transport' => \Prism\Relay\Enums\Transport::Stdio,
+	    ],
         'mcp' => [
-	        'url' => env('RELAY_GITHUB_SERVER_URL', 'http://ai.test/mcp'),
+	        'url' => env('RELAY_GITHUB_SERVER_URL', 'http://127.0.0.1:8099/mcp'),
 	        'timeout' => 30,
 	        'transport' => Transport::Http,
         ],

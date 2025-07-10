@@ -2,6 +2,7 @@
 
 namespace App\Mcp;
 
+use PhpMcp\Server\Attributes\McpResource;
 use PhpMcp\Server\Attributes\McpTool;
 
 class CalculatorElements
@@ -29,5 +30,22 @@ class CalculatorElements
 		int $exponent
 	): float {
 		return pow($base, $exponent);
+	}
+
+
+	/**
+	 * Get application configuration.
+	 */
+	#[McpResource(
+		uri: 'config://app/settings',
+		mimeType: 'application/json'
+	)]
+	public function getAppSettings(): array
+	{
+		return [
+			'theme' => config('app.theme', 'light'),
+			'timezone' => config('app.timezone'),
+			'features' => config('app.features', []),
+		];
 	}
 }
