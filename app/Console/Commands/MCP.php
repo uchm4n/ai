@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\Tools\Models;
+use App\Models\Drug;
 use Illuminate\Console\Command;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
@@ -38,6 +39,7 @@ class MCP extends Command
 	 */
 	public function handle()
 	{
+		dd(Drug::query()->take(2)->get());
 		$response = $this->agent(textarea('Prompt'))->asStream();
 
 		foreach ($response as $chunk) {
@@ -56,7 +58,7 @@ class MCP extends Command
 			->withSystemPrompt($this->systemMessage)
 			->withPrompt($prompt)
 			->withTools([
-				...Relay::tools('db'),
+				...Relay::tools('mcp'),
 			])
 			->usingTopP(1)
 			->withMaxSteps(50)

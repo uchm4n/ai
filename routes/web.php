@@ -4,9 +4,12 @@ use App\Console\Tools\Models;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TutorialsController;
+use App\Models\Drug;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use PhpMcp\Laravel\Facades\Mcp;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 
@@ -45,7 +48,6 @@ Route::get('/streaming', function () {
 	return response()->eventStream(function () {
 		$response = Prism::text()
 			->using(Provider::Gemini, Models::Gemini2_0->value)
-			->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
 			->withMaxSteps(4)
 			->withPrompt('What\'s the weather like in San Francisco today? And tel me a short story about the weather')
 			->usingTemperature(2)
@@ -58,6 +60,13 @@ Route::get('/streaming', function () {
 		}
 	});
 });
+
+
+// Register a simple tool
+Mcp::tool([\App\Mcp\CalculatorElements::class, 'add'])
+	->name('add_numbers')
+	->description('Add two numbers together');
+
 
 require __DIR__.'/auth.php';
 require __DIR__.'/staus.php';
