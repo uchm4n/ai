@@ -26,6 +26,12 @@ return [
 	        'timeout' => 30,
 	        'transport' => Transport::Http,
         ],
+	    'github' => [
+		    'url' => env('RELAY_GITHUB_SERVER_URL', 'https://api.githubcopilot.com/mcp/'),
+		    'api_key' => env('GITHUB_MCP_TOKEN', 'xxx'),
+		    'timeout' => 30,
+		    'transport' => \Prism\Relay\Enums\Transport::Http,
+	    ],
     ],
 
     /*

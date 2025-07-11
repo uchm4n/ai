@@ -44,10 +44,10 @@ class MCP extends Command
 	 */
 	public function handle()
 	{
-		// $txt = textarea('Prompt');
+		$txt = textarea('Prompt');
 		// $txt = "use tool add_numbers. what is addition of two numbers 5 and 2, return the result.";
 		// $txt = "Add two numbers together, 5 and 2, return the result.";
-		$txt = "Add two numbers together, 5 and 2, return the result.";
+		// $txt = "Add two numbers together, 5 and 2, return the result.";
 		// $txt = "Give me an Application configuration settings";
 		$response = $this->agent($txt)->asStream();
 
@@ -55,8 +55,6 @@ class MCP extends Command
 			// Write each chunk directly to output without buffering
 			info($chunk->text);
 		}
-
-
 	}
 
 
@@ -66,7 +64,8 @@ class MCP extends Command
 		try {
 			$tools = [
 				...Relay::tools('mcp'),
-				// ...Relay::tools('puppeteer'),
+				...Relay::tools('github'),
+				...Relay::tools('puppeteer'),
 			];
 			// Use the tools...
 		} catch (ServerConfigurationException $e) {
@@ -93,6 +92,6 @@ class MCP extends Command
 			->withTools($tools)
 			->usingTopP(1)
 			->withMaxSteps(50)
-			->withMaxTokens(8192);
+			->withMaxTokens(1000);
 	}
 }
