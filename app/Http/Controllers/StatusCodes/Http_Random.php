@@ -22,7 +22,7 @@ class Http_Random {
 
 		return response()->json([
 			'message' => Response::$statusTexts[$code],
-			'status' => $code
+			'status' => (int)$code
 		], $code);
 	}
 }
