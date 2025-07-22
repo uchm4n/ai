@@ -16,6 +16,7 @@ use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 use Prism\Prism\Text\PendingRequest;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
+use Prism\Prism\ValueObjects\ProviderTool;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
@@ -140,7 +141,9 @@ class Dashboard extends Controller
 			return response()->stream(function () use ($messageId, $prompt, $assistant) {
 				$stream = Prism::text()
 					->using(Provider::Gemini, Models::Gemini2_5->value)
-					->withProviderMeta(Provider::Gemini, ['searchGrounding' => true])
+					->withProviderTools([
+						new ProviderTool('google_search')
+					])
 					->withSystemPrompt($this->systemMessage)
 					->withMessages([
 						new UserMessage($prompt),
