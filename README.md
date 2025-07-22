@@ -13,6 +13,8 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL (pgVector), Docker, Seleniu
 - [x] Use LLM models for embeddings. RAG
 - [x] Scape data from the web
 - [x] Output `specialized` data based on the scraped data + LLM embeddings
+- [ ] Add MCP server
+- [ ] Make tools work with multiple MCP servers
 
 ### Demo
 
