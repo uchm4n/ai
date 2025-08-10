@@ -14,16 +14,16 @@ return [
     |
     */
 
-	'socialite' => [
-		'salt' => env('SOCIALITE_SALT')
-	],
+    'socialite' => [
+        'salt' => env('SOCIALITE_SALT'),
+    ],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
     'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
+        'key'    => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
@@ -35,26 +35,26 @@ return [
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+            'channel'              => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
 
     'github' => [
-	    'client_id' => env('GITHUB_CLIENT_ID'),
-	    'client_secret' => env('GITHUB_CLIENT_SECRET'),
-	    'redirect' => 'http://localhost/callback',
+        'client_id'     => env('GITHUB_CLIENT_ID'),
+        'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect'      => 'http://localhost/callback',
     ],
 
     'google' => [
-	    'client_id' => env('SOCIALITE_GOOGLE_CLIENT_ID'),
-	    'client_secret' => env('SOCIALITE_GOOGLE_CLIENT_SECRET'),
-	    'redirect' => env('SOCIALITE_GOOGLE_CLIENT_REDIRECT'),
+        'client_id'     => env('SOCIALITE_GOOGLE_CLIENT_ID'),
+        'client_secret' => env('SOCIALITE_GOOGLE_CLIENT_SECRET'),
+        'redirect'      => env('SOCIALITE_GOOGLE_CLIENT_REDIRECT'),
     ],
 
     'facebook' => [
-	    'client_id' => env('SOCIALITE_FACEBOOK_CLIENT_ID'),
-	    'client_secret' => env('SOCIALITE_FACEBOOK_CLIENT_SECRET'),
-	    'redirect' => env('SOCIALITE_FACEBOOK_CLIENT_REDIRECT'),
+        'client_id'     => env('SOCIALITE_FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('SOCIALITE_FACEBOOK_CLIENT_SECRET'),
+        'redirect'      => env('SOCIALITE_FACEBOOK_CLIENT_REDIRECT'),
     ],
 
 ];

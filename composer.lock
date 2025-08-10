@@ -3912,7 +3912,7 @@
             "dist": {
                 "type": "path",
                 "url": "../prism",
-                "reference": "a1a0cc8d4918a60dd5d831138cd4c4eda46424d6"
+                "reference": "6e68c96b5a2cbee7614ebd316c308441ce7bb45f"
             },
             "require": {
                 "ext-fileinfo": "*",

@@ -20,13 +20,12 @@ class Github extends Command
      */
     protected $description = 'Command description';
 
-
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         //
-	    $this->info('Hello, Github!');
+        $this->info('Hello, Github!');
     }
 }

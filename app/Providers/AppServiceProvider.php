@@ -11,6 +11,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    #[\Override]
     public function register(): void
     {
         //
@@ -23,10 +24,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
 
-	    // Blueprint::macro('vector', function (string $column, int $dimensions) {
-		//     $this->addColumn('vector', $column, ['dimensions' => $dimensions]);
-	    // });
-
+        // Blueprint::macro('vector', function (string $column, int $dimensions) {
+        //     $this->addColumn('vector', $column, ['dimensions' => $dimensions]);
+        // });
 
     }
 }

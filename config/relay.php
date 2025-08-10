@@ -15,23 +15,23 @@ return [
     |
     */
     'servers' => [
-	    'puppeteer' => [
-		    'command' => ['npx', '-y', '@modelcontextprotocol/server-puppeteer'],
-		    'timeout' => 30,
-		    'env' => [],
-		    'transport' => \Prism\Relay\Enums\Transport::Stdio,
-	    ],
-        'mcp' => [
-	        'url' => env('RELAY_GITHUB_SERVER_URL', 'http://127.0.0.1:8099/mcp'),
-	        'timeout' => 30,
-	        'transport' => Transport::Http,
+        'puppeteer' => [
+            'command'   => ['npx', '-y', '@modelcontextprotocol/server-puppeteer'],
+            'timeout'   => 30,
+            'env'       => [],
+            'transport' => \Prism\Relay\Enums\Transport::Stdio,
         ],
-	    'github' => [
-		    'url' => env('RELAY_GITHUB_SERVER_URL', 'https://api.githubcopilot.com/mcp/'),
-		    'api_key' => env('GITHUB_MCP_TOKEN', 'xxx'),
-		    'timeout' => 30,
-		    'transport' => \Prism\Relay\Enums\Transport::Http,
-	    ],
+        'mcp' => [
+            'url'       => env('RELAY_GITHUB_SERVER_URL', 'http://127.0.0.1:8099/mcp'),
+            'timeout'   => 30,
+            'transport' => Transport::Http,
+        ],
+        'github' => [
+            'url'       => env('RELAY_GITHUB_SERVER_URL', 'https://api.githubcopilot.com/mcp/'),
+            'api_key'   => env('GITHUB_MCP_TOKEN', 'xxx'),
+            'timeout'   => 30,
+            'transport' => \Prism\Relay\Enums\Transport::Http,
+        ],
     ],
 
     /*

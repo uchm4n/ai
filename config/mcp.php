@@ -7,7 +7,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'server' => [
-        'name' => env('MCP_SERVER_NAME', 'Dr.AI'),
+        'name'    => env('MCP_SERVER_NAME', 'Dr.AI'),
         'version' => env('MCP_SERVER_VERSION', '1.0.0'),
     ],
 
@@ -80,23 +80,23 @@ return [
 
     'capabilities' => [
         'tools' => [
-            'enabled' => env('MCP_CAP_TOOLS_ENABLED', true),
+            'enabled'     => env('MCP_CAP_TOOLS_ENABLED', true),
             'listChanged' => env('MCP_CAP_TOOLS_LIST_CHANGED', true),
         ],
 
         'resources' => [
-            'enabled' => env('MCP_CAP_RESOURCES_ENABLED', true),
-            'subscribe' => env('MCP_CAP_RESOURCES_SUBSCRIBE', true), // Enable resource subscriptions
+            'enabled'     => env('MCP_CAP_RESOURCES_ENABLED', true),
+            'subscribe'   => env('MCP_CAP_RESOURCES_SUBSCRIBE', true), // Enable resource subscriptions
             'listChanged' => env('MCP_CAP_RESOURCES_LIST_CHANGED', true),
         ],
 
         'prompts' => [
-            'enabled' => env('MCP_CAP_PROMPTS_ENABLED', true),
+            'enabled'     => env('MCP_CAP_PROMPTS_ENABLED', true),
             'listChanged' => env('MCP_CAP_PROMPTS_LIST_CHANGED', true),
         ],
 
         'logging' => [
-            'enabled' => env('MCP_CAP_LOGGING_ENABLED', true),
+            'enabled'  => env('MCP_CAP_LOGGING_ENABLED', true),
             'setLevel' => env('MCP_CAP_LOGGING_SET_LEVEL', false),
         ],
     ],

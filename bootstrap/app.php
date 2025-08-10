@@ -16,16 +16,16 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-	    $middleware->validateCsrfTokens(except: [
-		    'mcp',     // For streamable transport (default)
-		    'mcp/*',   // For legacy transport (if enabled)
-	    ]);
+        $middleware->validateCsrfTokens(except: [
+            'mcp',     // For streamable transport (default)
+            'mcp/*',   // For legacy transport (if enabled)
+        ]);
 
         //
     })
-	->withCommands([
-		__DIR__.'/../app/Console/Commands',
-	])
+    ->withCommands([
+        __DIR__.'/../app/Console/Commands',
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
-use Prism\Prism\Text\PendingRequest;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
 use Prism\Prism\ValueObjects\ProviderTool;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -22,234 +21,185 @@ use Throwable;
 
 class Dashboard extends Controller
 {
-	protected string $model = Models::Phi4->value;
-	protected Builder|HasMany|null $messages;
+    protected string $model = Models::Phi4->value;
 
-	protected array $options = ["temperature" => 0.0, "seed" => 101, "top_p" => 1.0, "max_tokens" => 500];
-	protected string $systemMessage = "You are an expert doctor named Dr.AI, Who can diagnose patients and prescribe medicine. 
+    protected Builder|HasMany|null $messages;
+
+    protected array $options = ['temperature' => 0.0, 'seed' => 101, 'top_p' => 1.0, 'max_tokens' => 500];
+
+    protected string $systemMessage = 'You are an expert doctor named Dr.AI, Who can diagnose patients and prescribe medicine. 
 										ALWAYS answer in MARKDOWN format and 
-										ALWAYS provide a diagnosis or prescription.";
-	private ?Authenticatable $user;
-	private string $strResponse = '';
+										ALWAYS provide a diagnosis or prescription.';
 
-	public function __construct()
-	{
-		$this->user     = auth()->user();
-		$this->messages = $this->user?->messages();
-	}
+    private readonly ?Authenticatable $user;
 
-	public function index()
-	{
-		return Inertia::render('Dashboard');
-	}
+    private string $strResponse = '';
 
-	public function send(Request $request)
-	{
-		try {
-			if ($request->has('switch') && $request->get('switch')) {
-				abort(404);
-			}
+    public function __construct()
+    {
+        $this->user = auth()->user();
+        $this->messages = $this->user?->messages();
+    }
 
-			$ai = Prism::text()
-				// ->withTools([new SearchTool()])
-				->withMaxSteps(5)
-				->withSystemPrompt($this->systemMessage)
-				->withMessages($request->get('promptInput'))
-				->withClientOptions(['timeout' => 120])
-				->using(Provider::Ollama, $this->model)
-				->asText();
+    public function index()
+    {
+        return Inertia::render('Dashboard');
+    }
 
-			return Inertia::render('Dashboard', ['msg' => trim($ai->text), 'status' => Response::HTTP_OK]);
-		} catch (Throwable $e) {
-			return Inertia::render('Dashboard', ['msg' => null, 'status' => Response::HTTP_INTERNAL_SERVER_ERROR]);
-		}
-	}
+    public function send(Request $request)
+    {
+        try {
+            if ($request->has('switch') && $request->get('switch')) {
+                abort(404);
+            }
 
-	public function stream(Request $request)
-	{
-		try {
-			// prompt caching for 5 seconds
-			[$messageId, $prompt] = cache()->remember('promptInput', 5, function () use ($request) {
-				$request->validate(['promptInput' => 'required|string|min:5']);
-				$prompt = str($request->get('promptInput'))->lower()->trim()->value();
-				//save prompt as a message
-				$messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt])->getQueueableId(
-				);
-				return [$messageId, $prompt];
-			});
+            $ai = Prism::text()
+                // ->withTools([new SearchTool()])
+                ->withMaxSteps(5)
+                ->withSystemPrompt($this->systemMessage)
+                ->withMessages($request->get('promptInput'))
+                ->withClientOptions(['timeout' => 120])
+                ->using(Provider::Ollama, $this->model)
+                ->asText();
 
-			$response = Http::withOptions(['stream' => true])->post(
-				config('prism.providers.ollama.url') . '/api/generate',
-				[
-					'system'  => $this->systemMessage,
-					'prompt'  => $prompt,
-					'model'   => $this->model,
-					'options' => $this->options,
-				],
-			);
+            return Inertia::render('Dashboard', ['msg' => trim($ai->text), 'status' => Response::HTTP_OK]);
+        } catch (Throwable) {
+            return Inertia::render('Dashboard', ['msg' => null, 'status' => Response::HTTP_INTERNAL_SERVER_ERROR]);
+        }
+    }
 
-			return response()->stream(function () use ($messageId, $response) {
-				$body = $response->getBody();
+    public function stream(Request $request)
+    {
+        try {
+            // prompt caching for 5 seconds
+            [$messageId, $prompt] = cache()->remember('promptInput', 5, function () use ($request): array {
+                $request->validate(['promptInput' => 'required|string|min:5']);
+                $prompt = str($request->get('promptInput'))->lower()->trim()->value();
+                // save prompt as a message
+                $messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt])->getQueueableId(
+                );
 
-				while (!$body->eof()) {
-					$chunk = $body->read(1024);
-					if (!empty($chunk)) {
-						$strResponse = str($chunk)->matchAll('/"response":\s*"([^"]*)"/')->implode('');
+                return [$messageId, $prompt];
+            });
 
-						// Proper SSE format with JSON data
-						echo "data: " . json_encode(['msg' => $strResponse]) . PHP_EOL . PHP_EOL;
-						$this->strResponse .= $strResponse;
+            $response = Http::withOptions(['stream' => true])->post(
+                config('prism.providers.ollama.url').'/api/generate',
+                [
+                    'system'  => $this->systemMessage,
+                    'prompt'  => $prompt,
+                    'model'   => $this->model,
+                    'options' => $this->options,
+                ],
+            );
 
-						// Flush output buffer
-						ob_flush();
-						flush();
-					}
+            return response()->stream(function () use ($messageId, $response): void {
+                $body = $response->getBody();
 
-					// Optional: Add slight delay if needed
-					// usleep(1000);
-				}
+                while (! $body->eof()) {
+                    $chunk = $body->read(1024);
+                    if (! empty($chunk)) {
+                        $strResponse = str($chunk)->matchAll('/"response":\s*"([^"]*)"/')->implode('');
 
-				//save response as a message, append to the previous messages
-				$this->appendToMessageResponse($messageId, $this->strResponse);
-			},
-				200,
-				[
-					'Content-Type'      => 'text/event-stream',
-					'Cache-Control'     => 'no-cache',
-					'Connection'        => 'keep-alive',
-					'X-Accel-Buffering' => 'no',
-				],
-			);
-		} catch (\Exception $e) {
-			return response()->json(['error' => $e->getMessage()], 500);
-		}
-	}
+                        // Proper SSE format with JSON data
+                        echo 'data: '.json_encode(['msg' => $strResponse]).PHP_EOL.PHP_EOL;
+                        $this->strResponse .= $strResponse;
 
-	public function streamG(Request $request)
-	{
-		try {
-			// prompt caching for 3 seconds
-			[$messageId, $prompt, $assistant] = cache()->remember('promptInput', 3, function () use ($request) {
-				$request->validate(['promptInput' => 'required|string|min:5']);
-				$prompt = str($request->get('promptInput'))->lower()->trim()->value();
-				//save prompt as a message
-				$messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
-				return [$messageId->getQueueableId(), $prompt, data_get($messageId->toArray(), 'response', '')];
-			});
+                        // Flush output buffer
+                        ob_flush();
+                        flush();
+                    }
 
-			// dd($messageId, $prompt, $assistant);
-			return response()->stream(function () use ($messageId, $prompt, $assistant) {
-				$stream = Prism::text()
-					->using(Provider::Gemini, Models::Gemini2_5->value)
-					->withProviderTools([
-						new ProviderTool('google_search')
-					])
-					->withSystemPrompt($this->systemMessage)
-					->withMessages([
-						new UserMessage($prompt),
-						// new AssistantMessage($assistant ?? '') // TODO: fix this
-					])
-					->withMaxTokens(8000)
-					->asStream();
+                    // Optional: Add slight delay if needed
+                    // usleep(1000);
+                }
 
-				foreach ($stream as $chunk) {
-					echo "data: " . json_encode(['msg' => $chunk->text]) . PHP_EOL . PHP_EOL;
-					$this->strResponse .= $chunk->text;
-					ob_flush();
-					flush();
-				}
+                // save response as a message, append to the previous messages
+                $this->appendToMessageResponse($messageId, $this->strResponse);
+            },
+                200,
+                [
+                    'Content-Type'      => 'text/event-stream',
+                    'Cache-Control'     => 'no-cache',
+                    'Connection'        => 'keep-alive',
+                    'X-Accel-Buffering' => 'no',
+                ],
+            );
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
-				//save response as a message, append to the previous messages
-				$this->appendToMessageResponse($messageId, $this->strResponse);
-			}, 200, [
-				'Cache-Control'     => 'no-cache',
-				'Content-Type'      => 'text/event-stream',
-				'X-Accel-Buffering' => 'no', // Prevents Nginx from buffering
-			]);
-		} catch (\Exception $e) {
-			logger()->error($e->getMessage());
-			return response()->json(['error' => $e->getMessage()], 500);
-		}
-	}
+    public function streamG(Request $request)
+    {
+        try {
+            // prompt caching for 3 seconds
+            [$messageId, $prompt, $assistant] = cache()->remember('promptInput', 3, function () use ($request): array {
+                $request->validate(['promptInput' => 'required|string|min:5']);
+                $prompt = str($request->get('promptInput'))->lower()->trim()->value();
+                // save prompt as a message
+                $messageId = $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt]);
 
+                return [$messageId->getQueueableId(), $prompt, data_get($messageId->toArray(), 'response', '')];
+            });
 
-	/**
-	 * TODO: Waiting for the next release of Prism package
-	 *      Specifically Prism::textSteam() feature
-	 * @param string $prompt
-	 * @return mixed
-	 */
-	private function previousMessagesWithPrompt(string $prompt)
-	{
-		$prompt = str($prompt)->lower()->trim()->value();
-		$msg    = $this->messages
-			->take(50)
-			->get(['response', 'text'])
-			->flatMap(function ($item) {
-				return [
-					[
-						'role'    => 'user',
-						'content' => str($item->text)->lower()->trim()->value(),
-					],
-					[
-						'role'    => 'assistant',
-						'content' => str($item->response)->lower()->trim()->value(),
-					],
-				];
-			})->merge([
-				[
-					'role'    => 'user',
-					'content' => $prompt,
-				],
-			]);
+            // dd($messageId, $prompt, $assistant);
+            return response()->stream(function () use ($messageId, $prompt): void {
+                $stream = Prism::text()
+                    ->using(Provider::Gemini, Models::Gemini2_5->value)
+                    ->withProviderTools([
+                        new ProviderTool('google_search'),
+                    ])
+                    ->withSystemPrompt($this->systemMessage)
+                    ->withMessages([
+                        new UserMessage($prompt),
+                        // new AssistantMessage($assistant ?? '') // TODO: fix this
+                    ])
+                    ->withMaxTokens(8000)
+                    ->asStream();
 
-		//save prompt as a message
-		defer(fn() => $this->messages->updateOrCreate(['text' => $prompt], ['text' => $prompt]));
+                foreach ($stream as $chunk) {
+                    echo 'data: '.json_encode(['msg' => $chunk->text]).PHP_EOL.PHP_EOL;
+                    $this->strResponse .= $chunk->text;
+                    ob_flush();
+                    flush();
+                }
 
-		return $msg->toArray();
-	}
+                // save response as a message, append to the previous messages
+                $this->appendToMessageResponse($messageId, $this->strResponse);
+            }, 200, [
+                'Cache-Control'     => 'no-cache',
+                'Content-Type'      => 'text/event-stream',
+                'X-Accel-Buffering' => 'no', // Prevents Nginx from buffering
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
 
-	/**
-	 * TODO: Waiting for the next release of Prism package
-	 *       Specifically Prism::textSteam() feature
-	 * @return PendingRequest
-	 */
-	private function prismFactory(): PendingRequest
-	{
-		return Prism::text()
-			->withSystemPrompt($this->systemMessage)
-			->withClientOptions(['timeout' => 120])
-			->using(Provider::Ollama, $this->model);
-	}
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
-	/**
-	 * @param int $messageId
-	 * @param string $newResponse
-	 * @return void
-	 */
-	private function appendToMessageResponse(int $messageId, string $newResponse): void
-	{
-		$message           = Messages::findOrFail($messageId);
-		$message->response = $newResponse;
-		$message->save();
-	}
+    private function appendToMessageResponse(int $messageId, string $newResponse): void
+    {
+        $message = Messages::findOrFail($messageId);
+        $message->response = $newResponse;
+        $message->save();
+    }
 
-	/**
-	 * Convert text to speech using Gemini 2.5
-	 *
-	 * @param Request $request
-	 * @return JsonResponse
-	 */
-	public function textToSpeech(Request $request): StreamedResponse|Response|JsonResponse
-	{
-		try {
-			return response()->streamDownload(function () {
-				echo file_get_contents(resource_path('audio/welcome.mp3'));
-			}, 'speech.mp3', [
-				'Content-Type' => 'audio/mpeg',
-			]);
-		} catch (\Exception $e) {
-			return response()->json(['error' => $e->getMessage()], 500);
-		}
-	}
+    /**
+     * Convert text to speech using Gemini 2.5
+     *
+     * @return JsonResponse
+     */
+    public function textToSpeech(Request $request): StreamedResponse|Response|JsonResponse
+    {
+        try {
+            return response()->streamDownload(function (): void {
+                echo file_get_contents(resource_path('audio/welcome.mp3'));
+            }, 'speech.mp3', [
+                'Content-Type' => 'audio/mpeg',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

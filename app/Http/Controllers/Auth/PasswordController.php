@@ -18,7 +18,7 @@ class PasswordController extends Controller
     {
         $validated = $request->validate([
             'current_password' => Rule::requiredIf($request->user()->socialite === null),
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password'         => ['required', Password::defaults(), 'confirmed'],
         ]);
 
         $request->user()->update([

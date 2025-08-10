@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\StatusCodes\HttpStatusController;
 use App\Http\Controllers\StatusCodes\Http_Random;
+use App\Http\Controllers\StatusCodes\HttpStatusController;
 use Illuminate\Support\Facades\Route;
 
 // Handle single HTTP status codes

@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Substance extends Model
 {
-	protected $guarded = [];
+    protected $guarded = [];
 
-	/**
-	 * A substance has many drugs
-	 * @return HasMany
-	 */
-	public function drugs(): HasMany
-	{
-		return $this->hasMany(Drug::class);
-	}
+    /**
+     * A substance has many drugs
+     */
+    public function drugs(): HasMany
+    {
+        return $this->hasMany(Drug::class);
+    }
 }
