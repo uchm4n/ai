@@ -2,12 +2,9 @@
 
 use App\Console\Tools\Models;
 use App\Http\Controllers\Dashboard;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TutorialsController;
 use App\Mcp\CalculatorElements;
-use App\Modules\Order\Http\Controllers\OrderController as ModulesOrderController;
-use App\Modules\Product\Http\Controllers\ProductController as ModulesProductController;
-use App\Modules\User\Http\Controllers\UserController as ModulesUserController;
+use App\Modules\User\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -57,25 +54,6 @@ Route::get('/streaming', fn () => response()->eventStream(function () {
         yield $chunk->text;
     }
 }));
-
-Route::get('/good-js', fn () => view('good-js'))->name('good-js');
-
-// Demo routes for modular DDD structure
-Route::prefix('modules')->group(function (): void {
-    Route::prefix('users')->group(function (): void {
-        Route::post('/', (new ModulesUserController())->store(...));
-        Route::put('/{id}', (new ModulesUserController())->update(...));
-        Route::delete('/{id}', (new ModulesUserController())->destroy(...));
-    });
-    Route::prefix('orders')->group(function (): void {
-        Route::post('/', [ModulesOrderController::class, 'store']);
-        Route::put('/{id}/process', [ModulesOrderController::class, 'process']);
-        Route::delete('/{id}', [ModulesOrderController::class, 'cancel']);
-    });
-    Route::prefix('products')->group(function (): void {
-        Route::post('/', [ModulesProductController::class, 'store']);
-    });
-});
 
 // //////////// Register MCP tools //////////////////
 // /
