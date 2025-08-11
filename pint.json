@@ -1,21 +1,21 @@
 {
   "preset": "laravel",
   "rules": {
-    "indentation_type" : false,
-    "simplified_null_return": true,
-    "array_indentation": true,
-    "statement_indentation": true,
-    "not_operator_with_successor_space": false,
     "cast_spaces": false,
     "phpdoc_align": true,
+    "indentation_type": false,
+    "array_indentation": true,
+    "simplified_null_return": true,
+    "not_operator_with_successor_space": false,
+    "statement_indentation": true,
     "new_with_parentheses": {
       "anonymous_class": true,
       "named_class": true
     },
-    "binary_operator_spaces" : {
+    "binary_operator_spaces": {
       "operators": {
-        "=" : "align_single_space",
-        "=>" : "align_single_space_minimal"
+        "=": "align_single_space",
+        "=>": "align_single_space_minimal"
       }
     }
   }
