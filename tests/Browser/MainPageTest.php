@@ -85,13 +85,13 @@ test('basic example', function (): void {
 
 function getBodyData(Browser $browser, string $href)
 {
-    $data = [];
+    $data    = [];
     $browser = $browser->visit($href);
     foreach ($browser->elements('figure') as $article) {
-        $img = $article->findElement(WebDriverBy::cssSelector('article a img'))->getAttribute('src');
-        $title = $article->findElement(WebDriverBy::cssSelector('article div[class="col-xs-12 col-sm-7 p_x_0"] h6'))->getText();
+        $img       = $article->findElement(WebDriverBy::cssSelector('article a img'))->getAttribute('src');
+        $title     = $article->findElement(WebDriverBy::cssSelector('article div[class="col-xs-12 col-sm-7 p_x_0"] h6'))->getText();
         $substance = $article->findElement(WebDriverBy::cssSelector('article div ul li a'))->getText();
-        $head = collect($article->findElements(WebDriverBy::cssSelector('article div ul li')))
+        $head      = collect($article->findElements(WebDriverBy::cssSelector('article div ul li')))
             ->map(fn ($item) => $item->getText())->implode(PHP_EOL);
         $body = collect($article->findElements(WebDriverBy::cssSelector('figcaption p')))
             ->map(fn ($item) => $item->getText())->implode(PHP_EOL);

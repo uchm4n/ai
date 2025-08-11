@@ -20,7 +20,7 @@ class SearchTool extends Tool
     public function search(string $drug): string
     {
         try {
-            $drug = strtolower($drug);
+            $drug    = strtolower($drug);
             $results = Drug::query()
                 ->where('title_en', 'like', "%$drug%")
                 ->orWhere('title_ka', 'like', "%$drug%")

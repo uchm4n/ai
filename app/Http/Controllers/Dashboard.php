@@ -37,7 +37,7 @@ class Dashboard extends Controller
 
     public function __construct()
     {
-        $this->user = auth()->user();
+        $this->user     = auth()->user();
         $this->messages = $this->user?->messages();
     }
 
@@ -180,7 +180,7 @@ class Dashboard extends Controller
 
     private function appendToMessageResponse(int $messageId, string $newResponse): void
     {
-        $message = Messages::findOrFail($messageId);
+        $message           = Messages::findOrFail($messageId);
         $message->response = $newResponse;
         $message->save();
     }

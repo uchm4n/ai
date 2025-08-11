@@ -3,16 +3,14 @@
 use App\Console\Tools\Models;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\TutorialsController;
-use App\Mcp\CalculatorElements;
-use App\Modules\User\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use PhpMcp\Laravel\Facades\Mcp;
+use Modules\User\Http\Controllers\ProfileController;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 
-Route::get('/', fn () => Inertia::render('Welcome', [
+Route::get('/', fn() => Inertia::render('Welcome', [
     'canLogin'       => Route::has('login'),
     'canRegister'    => Route::has('register'),
     'laravelVersion' => Application::VERSION,
@@ -35,12 +33,11 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
 
 Route::post('/text-to-speech', [Dashboard::class, 'textToSpeech'])->name('dashboard.text-to-speech');
 
-Route::get('/streaming', fn () => response()->eventStream(function () {
+Route::get('/streaming', fn() => response()->eventStream(function () {
     $response = Prism::text()
         ->using(Provider::Gemini, Models::Gemini2_0->value)
         ->withMaxSteps(4)
@@ -55,16 +52,9 @@ Route::get('/streaming', fn () => response()->eventStream(function () {
     }
 }));
 
-// //////////// Register MCP tools //////////////////
-// /
-Mcp::tool([CalculatorElements::class, 'add'])->description('Add two numbers together')->name('add_numbers');
-// Register a resource with metadata
-Mcp::resource('config://app/settings', [CalculatorElements::class, 'getAppSettings'])
-    ->name('app_settings')
-    ->description('Application configuration settings')
-    ->mimeType('application/json')
-    ->size(100);
 // //////////// MCP tools //////////////////
+// TODO
 
-require __DIR__.'/auth.php';
-require __DIR__.'/staus.php';
+
+require __DIR__ . '/auth.php';
+require __DIR__ . '/staus.php';

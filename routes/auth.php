@@ -1,19 +1,18 @@
 <?php
 
-use App\Modules\User\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Modules\User\Http\Controllers\Auth\ConfirmablePasswordController;
-use App\Modules\User\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Modules\User\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Modules\User\Http\Controllers\Auth\NewPasswordController;
-use App\Modules\User\Http\Controllers\Auth\PasswordController;
-use App\Modules\User\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Modules\User\Http\Controllers\Auth\RegisteredUserController;
-use App\Modules\User\Http\Controllers\Auth\SocialiteController;
-use App\Modules\User\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use Modules\User\Http\Controllers\Auth\AuthenticatedSessionController;
+use Modules\User\Http\Controllers\Auth\ConfirmablePasswordController;
+use Modules\User\Http\Controllers\Auth\EmailVerificationNotificationController;
+use Modules\User\Http\Controllers\Auth\EmailVerificationPromptController;
+use Modules\User\Http\Controllers\Auth\NewPasswordController;
+use Modules\User\Http\Controllers\Auth\PasswordController;
+use Modules\User\Http\Controllers\Auth\PasswordResetLinkController;
+use Modules\User\Http\Controllers\Auth\RegisteredUserController;
+use Modules\User\Http\Controllers\Auth\SocialiteController;
+use Modules\User\Http\Controllers\Auth\VerifyEmailController;
 
 Route::middleware('guest')->group(function (): void {
-
     Route::get('/socialite/{provider}/redirect', [SocialiteController::class, 'redirect'])->name('socialite.redirect');
     Route::get('/socialite/{provider}/callback', [SocialiteController::class, 'callback'])->name('socialite.callback');
 
