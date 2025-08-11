@@ -25,5 +25,24 @@ Laravel, ReactJS, InertiaJS, TailwindCSS, PostgreSQL (pgVector), Docker, Seleniu
 </a>
 
 
+### Extra features
+
+#### StatusCode Module
+- **Purpose**: Randomly picks HTTP status codes for testing purposes
+- **Functionality**: Tests HTTP responses with various status codes
+- **Use case**: Development and debugging of HTTP request handling
+
+#### Post Module  
+- **Purpose**: CRUD operations for Post entities
+- **Functionality**: Returns JSON responses for placeholder data
+- **External Integration**: Can be accessed via external API endpoints
+- **Operations**: Create, Read, Update, Delete posts with JSON format
+Try it:
+```js
+fetch('https://nuc.ge/posts')
+      .then(response => response.json())
+      .then(json => console.log(json))
+```
+
 
 

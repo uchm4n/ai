@@ -18,7 +18,6 @@ class StatusPipe
             $code = $code->first();
         }
 
-
         // Validate the code is a valid HTTP status code
         if (!isset(Response::$statusTexts[$code])) {
             $code = 404;

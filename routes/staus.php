@@ -7,4 +7,3 @@ use Modules\StatusCodes\Http\Controllers\HttpStatusController;
 Route::get('/{code}', [HttpStatusController::class, 'status'])
     ->where('code', '^[1-5][0-9]{2}(?:,[1-5][0-9]{2})*$')
     ->name('http.status');
-

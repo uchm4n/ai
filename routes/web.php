@@ -56,4 +56,5 @@ Route::get('/streaming', fn () => response()->eventStream(function () {
 // TODO
 
 require __DIR__.'/staus.php';
+require __DIR__.'/posts.php';
 require __DIR__.'/auth.php';

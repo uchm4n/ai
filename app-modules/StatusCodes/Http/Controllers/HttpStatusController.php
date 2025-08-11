@@ -10,6 +10,7 @@ class HttpStatusController
     public function status($codes, StatusAction $action): JsonResponse
     {
         $result = $action($codes);
+
         return response()->json(['data' => $result]);
     }
 }
