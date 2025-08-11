@@ -2,7 +2,6 @@
 
 namespace Modules;
 
-use Illuminate\Contracts\Pipeline\Pipeline as PipelineContract;
 use Illuminate\Pipeline\Pipeline;
 
 abstract class BaseAction implements ActionInterface
@@ -21,7 +20,7 @@ abstract class BaseAction implements ActionInterface
     public function run(mixed $payload): mixed
     {
         /** @var Pipeline $pipeline */
-        $pipeline = app(PipelineContract::class);
+        $pipeline = app(Pipeline::class);
 
         return $pipeline
             ->send($payload)
