@@ -24,7 +24,7 @@ class SocialiteController extends Controller
     // callback
     public function callback($provider)
     {
-        if (! $provider) {
+        if (!$provider) {
             abort(404, 'Callback provider not found');
         }
 

@@ -5,6 +5,9 @@
     "simplified_null_return": true,
     "array_indentation": true,
     "statement_indentation": true,
+    "not_operator_with_successor_space": false,
+    "cast_spaces": false,
+    "phpdoc_align": true,
     "new_with_parentheses": {
       "anonymous_class": true,
       "named_class": true

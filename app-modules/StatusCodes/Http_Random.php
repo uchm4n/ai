@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\StatusCodes;
+namespace Modules\StatusCodes;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class Http_Random
     /**
      * Invoke the controller
      *
-     * @param  string  $codes  Comma-separated list of HTTP status codes
+     * @param string $codes Comma-separated list of HTTP status codes
      */
     public function __invoke(Request $request, string $codes): JsonResponse
     {
@@ -21,7 +21,7 @@ class Http_Random
 
         return response()->json([
             'message' => Response::$statusTexts[$code],
-            'status'  => (int) $code,
+            'status'  => (int)$code,
         ], $code);
     }
 }

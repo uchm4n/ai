@@ -12,9 +12,9 @@ class CheckUserExistsPipe
     {
         if (is_array($payload) && Schema::hasTable('users')) {
             $query = UserModel::query();
-            if (! empty($payload['id'])) {
+            if (!empty($payload['id'])) {
                 $query->whereKey($payload['id']);
-            } elseif (! empty($payload['email'])) {
+            } elseif (!empty($payload['email'])) {
                 $query->where('email', $payload['email']);
             }
 

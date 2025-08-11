@@ -10,7 +10,7 @@ class DeleteUserPipe
     public function handle(mixed $payload, Closure $next): mixed
     {
         if (is_array($payload)) {
-            if (! empty($payload['_model']) && Schema::hasTable('users')) {
+            if (!empty($payload['_model']) && Schema::hasTable('users')) {
                 $payload['_model']->delete();
                 $payload['_deleted'] = true;
             } else {

@@ -11,7 +11,7 @@ class CreateUserDatabasePipe
 {
     public function handle(mixed $payload, Closure $next): mixed
     {
-        if (! is_array($payload)) {
+        if (!is_array($payload)) {
             return $next($payload);
         }
 
@@ -23,7 +23,7 @@ class CreateUserDatabasePipe
                 'email' => $payload['email'] ?? ($model?->email),
             ];
 
-            if (! empty($payload['password'])) {
+            if (!empty($payload['password'])) {
                 $attributes['password'] = Hash::make($payload['password']);
             }
 

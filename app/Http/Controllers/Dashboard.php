@@ -95,9 +95,9 @@ class Dashboard extends Controller
             return response()->stream(function () use ($messageId, $response): void {
                 $body = $response->getBody();
 
-                while (! $body->eof()) {
+                while (!$body->eof()) {
                     $chunk = $body->read(1024);
-                    if (! empty($chunk)) {
+                    if (!empty($chunk)) {
                         $strResponse = str($chunk)->matchAll('/"response":\s*"([^"]*)"/')->implode('');
 
                         // Proper SSE format with JSON data

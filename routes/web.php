@@ -10,7 +10,7 @@ use Modules\User\Http\Controllers\ProfileController;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 
-Route::get('/', fn() => Inertia::render('Welcome', [
+Route::get('/', fn () => Inertia::render('Welcome', [
     'canLogin'       => Route::has('login'),
     'canRegister'    => Route::has('register'),
     'laravelVersion' => Application::VERSION,
@@ -37,7 +37,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 
 Route::post('/text-to-speech', [Dashboard::class, 'textToSpeech'])->name('dashboard.text-to-speech');
 
-Route::get('/streaming', fn() => response()->eventStream(function () {
+Route::get('/streaming', fn () => response()->eventStream(function () {
     $response = Prism::text()
         ->using(Provider::Gemini, Models::Gemini2_0->value)
         ->withMaxSteps(4)
@@ -55,6 +55,5 @@ Route::get('/streaming', fn() => response()->eventStream(function () {
 // //////////// MCP tools //////////////////
 // TODO
 
-
-require __DIR__ . '/auth.php';
-require __DIR__ . '/staus.php';
+require __DIR__.'/staus.php';
+require __DIR__.'/auth.php';
