@@ -40,6 +40,9 @@ return [
             'busy_timeout'            => null,
             'journal_mode'            => null,
             'synchronous'             => null,
+            // WAL MODE. in case of you deploy in production sqlite with concurrent, write
+            // 'busy_timeout' => 10000,
+            // 'journal_mode' => 'wal'
         ],
 
         'libsql' => [ // install libsql from Turso. after php 8.4 is released
