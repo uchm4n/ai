@@ -13,8 +13,8 @@ return new class() extends Migration
     {
         Schema::create('embeddings', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable(); // Optional title or identifier
-            $table->vector('embedding', 1536); // Vector column with dimension 1536
+            // $table->string('name')->nullable(); // Optional title or identifier
+            // $table->vector('embedding', 1536); // Vector column with dimension 1536
             $table->timestamps();
         });
     }
